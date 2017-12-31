@@ -176,7 +176,7 @@ public class TipsManager {
         Set<Hash> tipSet;
         Set<Hash> analyzedTips = new HashSet<>();
         int traversedTails = 0;
-        TransactionViewModel transactionViewModel;
+        TransactionViewModel transactionViewModel = null;
         int approverIndex;
         double ratingWeight;
         double[] walkRatings;
@@ -255,7 +255,7 @@ public class TipsManager {
         log.info("Tx traversed to find tip: " + traversedTails);
         messageQ.publish("mctn %d", traversedTails);
 
-        if (traversedTails == 0) {
+        if (traversedTails == 0 && !ledgerValidator.updateFromSnapshot(transactionViewModel.getHash())) {
             throw new RuntimeException("starting tip failed consistency checks: " + tail.toString());
         }
 
