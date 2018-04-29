@@ -54,7 +54,7 @@ public class IRI {
                 } catch (SecurityException e) {
                     log.error("Could not create directory", e);
                 }
-            }
+            }O
             exportDir = new File("export-solid");
             // if the directory does not exist, create it
             if (!exportDir.exists()) {
