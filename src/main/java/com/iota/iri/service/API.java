@@ -3,7 +3,7 @@ package com.iota.iri.service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.iota.iri.*;
-import com.iota.iri.conf.Configuration2;
+import com.iota.iri.conf.Configuration;
 import com.iota.iri.conf.ConfigurationOld;
 import com.iota.iri.controllers.AddressViewModel;
 import com.iota.iri.controllers.BundleViewModel;
@@ -96,7 +96,7 @@ public class API {
     public API(Iota instance, IXI ixi) {
         this.instance = instance;
         this.ixi = ixi;
-        Configuration2 configuration = instance.configuration;
+        Configuration configuration = instance.configuration;
         minRandomWalks = configuration.getMinRandomWalks();
         maxRandomWalks = configuration.getMaxRandomWalks();
         maxFindTxs = configuration.getMaxFindTransactions();
@@ -112,7 +112,7 @@ public class API {
     public void init() throws IOException {
         readPreviousEpochsSpentAddresses(testNet);
 
-        Configuration2 configuration = instance.configuration;
+        Configuration configuration = instance.configuration;
         final int apiPort = configuration.getPort();
         final String apiHost = configuration.getApiHost();
 

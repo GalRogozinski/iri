@@ -1,6 +1,6 @@
 package com.iota.iri;
 
-import com.iota.iri.conf.Configuration2;
+import com.iota.iri.conf.Configuration;
 import com.iota.iri.conf.ConfigurationOld;
 import com.iota.iri.controllers.*;
 import com.iota.iri.hash.SpongeFactory;
@@ -37,7 +37,7 @@ public class Iota {
     public final Node node;
     public final UDPReceiver udpReceiver;
     public final Replicator replicator;
-    public final Configuration2 configuration;
+    public final Configuration configuration;
     public final Hash coordinator;
     public final TipsViewModel tipsViewModel;
     public final MessageQ messageQ;
@@ -48,7 +48,7 @@ public class Iota {
     public final int tcpPort;
     public final int maxTipSearchDepth;
 
-    public Iota(Configuration2 configuration) throws IOException {
+    public Iota(Configuration configuration) throws IOException {
         this.configuration = configuration;
         testnet = configuration.isTestnet();
         maxPeers = configuration.getMaxPeers();

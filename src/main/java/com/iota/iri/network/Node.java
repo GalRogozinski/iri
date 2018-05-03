@@ -2,7 +2,7 @@ package com.iota.iri.network;
 
 import com.iota.iri.Milestone;
 import com.iota.iri.TransactionValidator;
-import com.iota.iri.conf.Configuration2;
+import com.iota.iri.conf.Configuration;
 import com.iota.iri.controllers.TipsViewModel;
 import com.iota.iri.controllers.TransactionViewModel;
 import com.iota.iri.hash.SpongeFactory;
@@ -52,7 +52,7 @@ public class Node {
     private final DatagramPacket tipRequestingPacket;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(5);
-    private final Configuration2 configuration;
+    private final Configuration configuration;
     private final Tangle tangle;
     private final TipsViewModel tipsViewModel;
     private final TransactionValidator transactionValidator;
@@ -76,7 +76,7 @@ public class Node {
     public static final ConcurrentSkipListSet<String> rejectedAddresses = new ConcurrentSkipListSet<String>();
     private DatagramSocket udpSocket;
 
-    public Node(final Configuration2 configuration,
+    public Node(final Configuration configuration,
                 final Tangle tangle,
                 final TransactionValidator transactionValidator,
                 final TransactionRequester transactionRequester,
