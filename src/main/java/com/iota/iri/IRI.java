@@ -1,6 +1,7 @@
 package com.iota.iri;
 
 import com.iota.iri.conf.Configuration;
+import com.iota.iri.conf.ConfigurationFactory;
 import com.iota.iri.conf.IotaConfiguration;
 import com.iota.iri.service.API;
 import org.slf4j.Logger;
@@ -25,8 +26,9 @@ public class IRI {
     public static Configuration configuration;
     private static final String TESTNET_FLAG_REQUIRED = "--testnet flag must be turned on to use ";
 
-    public static void main(final String[] args) throws IOException {
-        configuration = new IotaConfiguration();
+    public static void main(final String[] args) throws IOException, InstantiationException, IllegalAccessException {
+        File iotaConf = new File("iota.ini");
+        configuration = ConfigurationFactory.parseConfiguration(IotaConfiguration.class, iotaConf ,args);
         log.info("Welcome to {} {}", configuration.isTestnet() ? TESTNET_NAME : MAINNET_NAME, VERSION);
         iota = new Iota(configuration);
         ixi = new IXI(iota);

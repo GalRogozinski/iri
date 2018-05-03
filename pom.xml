@@ -162,6 +162,11 @@
             <version>1.72</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-properties</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
