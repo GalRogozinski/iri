@@ -1,5 +1,7 @@
 package com.iota.iri.conf;
 
+import com.beust.jcommander.Parameter;
+
 import java.util.Collection;
 import java.util.Set;
 
@@ -56,10 +58,10 @@ public class IotaConfiguration implements Configuration2 {
 
 
     //Snapshot
-    private int snapshotTime;
+    private long snapshotTime;
     private String snapshotFile;
     private String snapshotSignatureFile;
-    private int milsestoneStartIndex;
+    private int milestoneStartIndex;
     private int numberOfKeysInMilestone;
 
     //ZMQ
@@ -67,7 +69,7 @@ public class IotaConfiguration implements Configuration2 {
     private int zmqPort;
     private String zmqIpc;
     private int qSizeNode;
-    private int pDropCacheEntryDescription;
+    private int pDropCacheEntry;
     private int pCacheSizeBytes;
 
     //coordinator
@@ -82,15 +84,18 @@ public class IotaConfiguration implements Configuration2 {
 
 
     @Override
+    @Parameter(names = {"--port", "-p"}, description = ConfigDescriptions.PORT)
     public int getPort() {
         return port;
     }
 
+    @Parameter
     public void setPort(int port) {
         this.port = port;
     }
 
     @Override
+    @Parameter(names = {"--host"}, description = ConfigDescriptions.API_HOST)
     public String getApiHost() {
         return apiHost;
     }
@@ -100,6 +105,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--remote-limit-api"}, description = ConfigDescriptions.API_HOST)
     public Set<String> getRemoteLimitApi() {
         return remoteLimitApi;
     }
@@ -109,6 +115,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--max-find-transactions"}, description = ConfigDescriptions.MAX_FIND_TRANSACTIONS)
     public int getMaxFindTransactions() {
         return maxFindTransactions;
     }
@@ -118,6 +125,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--max-request-list"}, description = ConfigDescriptions.MAX_REQUESTS_LIST)
     public int getMaxRequestList() {
         return maxRequestList;
     }
@@ -127,6 +135,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--max-get-trytes"}, description = ConfigDescriptions.MAX_GET_TRYTES)
     public int getMaxGetTrytes() {
         return maxGetTrytes;
     }
@@ -136,6 +145,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--max-body-length"}, description = ConfigDescriptions.MAX_BODY_LENGTH)
     public int getMaxBodyLength() {
         return maxBodyLength;
     }
@@ -145,6 +155,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--remote-auth"}, description = ConfigDescriptions.REMOTE_AUTH)
     public String getRemoteAuth() {
         return remoteAuth;
     }
@@ -154,6 +165,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"-u", "--udp-reciever-port"})
     public int getUdpRecieverPort() {
         return udpRecieverPort;
     }
@@ -163,6 +175,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"-t", "--tcp-reciever-port"})
     public int getTcpRecieverPort() {
         return tcpRecieverPort;
     }
@@ -172,7 +185,8 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
-    public float getpRemoveRequest() {
+    @Parameter(names = {"-p", "--p-remove-request"}, description = ConfigDescriptions.P_REMOVE_REQUEST)
+    public float getPRemoveRequest() {
         return pRemoveRequest;
     }
 
@@ -181,6 +195,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--send-limit"}, description = ConfigDescriptions.SEND_LIMIT)
     public int getSendLimit() {
         return sendLimit;
     }
@@ -190,6 +205,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--max-peers"}, description = ConfigDescriptions.MAX_PEERS)
     public int getMaxPeers() {
         return maxPeers;
     }
@@ -199,6 +215,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--dns--refresher"}, description = ConfigDescriptions.DNS_REFRESHER_ENABLED)
     public boolean isDnsRefresherEnabled() {
         return dnsRefresherEnabled;
     }
@@ -208,6 +225,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--dns-resolution"}, description = ConfigDescriptions.DNS_RESOLUTION_ENABLED)
     public boolean isDnsResolutionEnabled() {
         return dnsResolutionEnabled;
     }
@@ -217,6 +235,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"-n", "--neighbors"}, description = ConfigDescriptions.NEIGHBORS)
     public Collection<String> getNeighbors() {
         return neighbors;
     }
@@ -226,6 +245,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--testnet"}, description = ConfigDescriptions.TESTNET)
     public boolean isTestnet() {
         return testnet;
     }
@@ -244,6 +264,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--ixi-dir"}, description = ConfigDescriptions.IXI_DIR)
     public String getIxiDir() {
         return ixiDir;
     }
@@ -253,6 +274,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--db-path"}, description = ConfigDescriptions.DB_PATH)
     public String getDbPath() {
         return dbPath;
     }
@@ -262,6 +284,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--db-log-path"}, description = ConfigDescriptions.DB_LOG_PATH)
     public String getDbLogPath() {
         return dbLogPath;
     }
@@ -271,6 +294,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--db-cache-size"}, description = ConfigDescriptions.DB_CACHE_SIZE)
     public int getDbCacheSize() {
         return dbCacheSize;
     }
@@ -280,6 +304,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--main-db"}, description = ConfigDescriptions.MAIN_DB)
     public String getMainDb() {
         return mainDb;
     }
@@ -289,6 +314,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--export"}, description = ConfigDescriptions.EXPORT)
     public boolean isExport() {
         return export;
     }
@@ -298,6 +324,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--revalidate"}, description = ConfigDescriptions.EXPORT)
     public boolean isRevalidate() {
         return revalidate;
     }
@@ -307,6 +334,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--rescan"}, description = ConfigDescriptions.EXPORT)
     public boolean isRescanDb() {
         return rescanDb;
     }
@@ -316,6 +344,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--mwm"}, description = ConfigDescriptions.MWM)
     public int getMwm() {
         return mwm;
     }
@@ -325,6 +354,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--packet-size"}, description = ConfigDescriptions.TRANSACTION_PACKET_SIZE)
     public int getTransactionPacketSize() {
         return transactionPacketSize;
     }
@@ -334,6 +364,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--request-hash-size"}, description = ConfigDescriptions.REQUEST_HASH_SIZE)
     public int getRequestHashSize() {
         return requestHashSize;
     }
@@ -343,6 +374,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--p-reply-random"}, description = ConfigDescriptions.P_REPLY_RANDOM_TIP)
     public float getpReplyRandomTip() {
         return pReplyRandomTip;
     }
@@ -352,6 +384,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--p-drop-transaction"}, description = ConfigDescriptions.P_DROP_TRANSACTION)
     public float getpDropTransaction() {
         return pDropTransaction;
     }
@@ -361,6 +394,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--p-select-milestone"}, description = ConfigDescriptions.P_SELECT_MILESTONE)
     public float getpSelectMilestoneChild() {
         return pSelectMilestoneChild;
     }
@@ -370,6 +404,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--p-send-milestone"}, description = ConfigDescriptions.P_SEND_MILESTONE)
     public float getpSendMilestone() {
         return pSendMilestone;
     }
@@ -379,6 +414,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--p-propagate-request"}, description = ConfigDescriptions.P_PROPAGATE_REQUEST)
     public float getpPropagateRequest() {
         return pPropagateRequest;
     }
@@ -388,6 +424,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = {"--mwm"}, description = ConfigDescriptions.MWM)
     public int getMinimumWeightMagnitude() {
         return minimumWeightMagnitude;
     }
@@ -397,15 +434,18 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
-    public int getSnapshotTime() {
+    @Parameter(names = "--snapshot-time", description = ConfigDescriptions.SNAPSHOT_TIME)
+    public long getSnapshotTime() {
         return snapshotTime;
     }
 
-    public void setSnapshotTime(int snapshotTime) {
+    public void setSnapshotTime(long snapshotTime) {
         this.snapshotTime = snapshotTime;
     }
 
     @Override
+    @Parameter(names = "--snapshot-file", description = ConfigDescriptions.SNAPSHOT_FILE)
+    //TODO maybe change string to file. Experiment with Jackson before
     public String getSnapshotFile() {
         return snapshotFile;
     }
@@ -415,6 +455,8 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--snapshot-signature", description = ConfigDescriptions.SNAPSHOT_SIGNATURE_FILE)
+    //TODO maybe change string to file. Experiment with Jackson before
     public String getSnapshotSignatureFile() {
         return snapshotSignatureFile;
     }
@@ -424,15 +466,17 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
-    public int getMilsestoneStartIndex() {
-        return milsestoneStartIndex;
+    @Parameter(names = "--milestone-start-index", description = ConfigDescriptions.MILESTONE_START_INDEX)
+    public int getMilestoneStartIndex() {
+        return milestoneStartIndex;
     }
 
-    public void setMilsestoneStartIndex(int milsestoneStartIndex) {
-        this.milsestoneStartIndex = milsestoneStartIndex;
+    public void setMilestoneStartIndex(int milestoneStartIndex) {
+        this.milestoneStartIndex = milestoneStartIndex;
     }
 
     @Override
+    @Parameter(names = "--milestone-keys", description = ConfigDescriptions.MWM)
     public int getNumberOfKeysInMilestone() {
         return numberOfKeysInMilestone;
     }
@@ -442,6 +486,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--zmq-enabled", description = ConfigDescriptions.ZMQ_ENABLED)
     public boolean isZmqEnabled() {
         return zmqEnabled;
     }
@@ -451,6 +496,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--zmq-port", description = ConfigDescriptions.ZMQ_PORT)
     public int getZmqPort() {
         return zmqPort;
     }
@@ -460,6 +506,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--zmq-ipc", description = ConfigDescriptions.ZMQ_IPC)
     public String getZmqIpc() {
         return zmqIpc;
     }
@@ -469,24 +516,27 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
-    public int getqSizeNode() {
+    @Parameter(names = "--queue-size", description = ConfigDescriptions.Q_SIZE_NODE)
+    public int getQSizeNode() {
         return qSizeNode;
     }
 
-    public void setqSizeNode(int qSizeNode) {
+    public void setQSizeNode(int qSizeNode) {
         this.qSizeNode = qSizeNode;
     }
 
     @Override
-    public int getpDropCacheEntryDescription() {
-        return pDropCacheEntryDescription;
+    @Parameter(names = "--p-drop-cache", description = ConfigDescriptions.P_DROP_CACHE_ENTRY)
+    public int getPDropCacheEntry() {
+        return pDropCacheEntry;
     }
 
-    public void setpDropCacheEntryDescription(int pDropCacheEntryDescription) {
-        this.pDropCacheEntryDescription = pDropCacheEntryDescription;
+    public void setpDropCacheEntry(int pDropCacheEntry) {
+        this.pDropCacheEntry = pDropCacheEntry;
     }
 
     @Override
+    @Parameter(names = "--p-cache-size", description = ConfigDescriptions.P_CACHE_SIZE_BYTES)
     public int getpCacheSizeBytes() {
         return pCacheSizeBytes;
     }
@@ -496,6 +546,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--testnet-coordinator", description = ConfigDescriptions.COORDINATOR)
     public String getCoordinator() {
         return coordinator;
     }
@@ -505,6 +556,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--validate--testnet--milestone", description = ConfigDescriptions.VALIDATE_TESTNET_MILESTONE_SIG)
     public boolean isValidateTestnetMilestoneSig() {
         return validateTestnetMilestoneSig;
     }
@@ -514,6 +566,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--min-random-walks", description = ConfigDescriptions.MIN_RANDOM_WALKS)
     public int getMinRandomWalks() {
         return minRandomWalks;
     }
@@ -523,6 +576,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--max-random-walks", description = ConfigDescriptions.MAX_RANDOM_WALKS)
     public int getMaxRandomWalks() {
         return maxRandomWalks;
     }
@@ -532,6 +586,7 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
+    @Parameter(names = "--max-depth", description = ConfigDescriptions.MAX_RANDOM_WALKS)
     public int getMaxDepth() {
         return maxDepth;
     }
