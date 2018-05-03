@@ -21,7 +21,7 @@ public class IotaConfiguration implements Configuration2 {
     //Network
     private int udpRecieverPort;
     private int tcpRecieverPort;
-    private float pRemoveRequest;
+    private double pRemoveRequest;
     private int sendLimit;
     private int maxPeers;
     private boolean dnsRefresherEnabled;
@@ -49,11 +49,11 @@ public class IotaConfiguration implements Configuration2 {
     private int mwm;
     private int transactionPacketSize;
     private int requestHashSize;
-    private float pReplyRandomTip;
-    private float pDropTransaction;
-    private float pSelectMilestoneChild;
-    private float pSendMilestone;
-    private float pPropagateRequest;
+    private double pReplyRandomTip;
+    private double pDropTransaction;
+    private double pSelectMilestoneChild;
+    private double pSendMilestone;
+    private double pPropagateRequest;
     private int minimumWeightMagnitude;
 
 
@@ -70,7 +70,7 @@ public class IotaConfiguration implements Configuration2 {
     private String zmqIpc;
     private int qSizeNode;
     private int pDropCacheEntry;
-    private int pCacheSizeBytes;
+    private int cacheSizeBytes;
 
     //coordinator
     String coordinator;
@@ -186,11 +186,11 @@ public class IotaConfiguration implements Configuration2 {
 
     @Override
     @Parameter(names = {"-p", "--p-remove-request"}, description = ConfigDescriptions.P_REMOVE_REQUEST)
-    public float getPRemoveRequest() {
+    public double getPRemoveRequest() {
         return pRemoveRequest;
     }
 
-    public void setpRemoveRequest(float pRemoveRequest) {
+    public void setpRemoveRequest(double pRemoveRequest) {
         this.pRemoveRequest = pRemoveRequest;
     }
 
@@ -375,51 +375,51 @@ public class IotaConfiguration implements Configuration2 {
 
     @Override
     @Parameter(names = {"--p-reply-random"}, description = ConfigDescriptions.P_REPLY_RANDOM_TIP)
-    public float getpReplyRandomTip() {
+    public double getpReplyRandomTip() {
         return pReplyRandomTip;
     }
 
-    public void setpReplyRandomTip(float pReplyRandomTip) {
+    public void setpReplyRandomTip(double pReplyRandomTip) {
         this.pReplyRandomTip = pReplyRandomTip;
     }
 
     @Override
     @Parameter(names = {"--p-drop-transaction"}, description = ConfigDescriptions.P_DROP_TRANSACTION)
-    public float getpDropTransaction() {
+    public double getPDropTransaction() {
         return pDropTransaction;
     }
 
-    public void setpDropTransaction(float pDropTransaction) {
+    public void setpDropTransaction(double pDropTransaction) {
         this.pDropTransaction = pDropTransaction;
     }
 
     @Override
     @Parameter(names = {"--p-select-milestone"}, description = ConfigDescriptions.P_SELECT_MILESTONE)
-    public float getpSelectMilestoneChild() {
+    public double getpSelectMilestoneChild() {
         return pSelectMilestoneChild;
     }
 
-    public void setpSelectMilestoneChild(float pSelectMilestoneChild) {
+    public void setpSelectMilestoneChild(double pSelectMilestoneChild) {
         this.pSelectMilestoneChild = pSelectMilestoneChild;
     }
 
     @Override
     @Parameter(names = {"--p-send-milestone"}, description = ConfigDescriptions.P_SEND_MILESTONE)
-    public float getpSendMilestone() {
+    public double getPSendMilestone() {
         return pSendMilestone;
     }
 
-    public void setpSendMilestone(float pSendMilestone) {
+    public void setpSendMilestone(double pSendMilestone) {
         this.pSendMilestone = pSendMilestone;
     }
 
     @Override
     @Parameter(names = {"--p-propagate-request"}, description = ConfigDescriptions.P_PROPAGATE_REQUEST)
-    public float getpPropagateRequest() {
+    public double getPPropagateRequest() {
         return pPropagateRequest;
     }
 
-    public void setpPropagateRequest(float pPropagateRequest) {
+    public void setpPropagateRequest(double pPropagateRequest) {
         this.pPropagateRequest = pPropagateRequest;
     }
 
@@ -536,13 +536,13 @@ public class IotaConfiguration implements Configuration2 {
     }
 
     @Override
-    @Parameter(names = "--p-cache-size", description = ConfigDescriptions.P_CACHE_SIZE_BYTES)
-    public int getpCacheSizeBytes() {
-        return pCacheSizeBytes;
+    @Parameter(names = "--cache-size", description = ConfigDescriptions.P_CACHE_SIZE_BYTES)
+    public int getCacheSizeBytes() {
+        return cacheSizeBytes;
     }
 
-    public void setpCacheSizeBytes(int pCacheSizeBytes) {
-        this.pCacheSizeBytes = pCacheSizeBytes;
+    public void setCacheSizeBytes(int cacheSizeBytes) {
+        this.cacheSizeBytes = cacheSizeBytes;
     }
 
     @Override

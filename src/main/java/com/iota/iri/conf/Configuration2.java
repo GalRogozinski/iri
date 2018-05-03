@@ -50,7 +50,7 @@ public interface Configuration2 {
 
     int getTcpRecieverPort();
 
-    float getPRemoveRequest();
+    double getPRemoveRequest();
 
     int getSendLimit();
 
@@ -88,15 +88,15 @@ public interface Configuration2 {
 
     int getRequestHashSize();
 
-    float getpReplyRandomTip();
+    double getpReplyRandomTip();
 
-    float getpDropTransaction();
+    double getPDropTransaction();
 
-    float getpSelectMilestoneChild();
+    double getpSelectMilestoneChild();
 
-    float getpSendMilestone();
+    double getPSendMilestone();
 
-    float getpPropagateRequest();
+    double getPPropagateRequest();
 
     int getMinimumWeightMagnitude();
 
@@ -120,7 +120,7 @@ public interface Configuration2 {
 
     int getPDropCacheEntry();
 
-    int getpCacheSizeBytes();
+    int getCacheSizeBytes();
 
     String getCoordinator();
 
