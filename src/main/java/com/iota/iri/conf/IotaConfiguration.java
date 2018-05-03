@@ -5,7 +5,7 @@ import com.beust.jcommander.Parameter;
 import java.util.Collection;
 import java.util.Set;
 
-public class IotaConfiguration implements Configuration2 {
+public class IotaConfiguration implements Configuration {
 
     //API
     private int port;
