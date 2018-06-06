@@ -18,6 +18,7 @@ matrix:
   - jdk: oraclejdk9
 before_install:
 - ./ecr_credentials.sh
+- pip2 install --user awscli
 script:
 - build_head=$(git rev-parse HEAD)
 - git config --replace-all remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
@@ -33,6 +34,7 @@ script:
 - cd iri-regression-tests
 - git checkout -f master
 - mkdir iri
+- aws --profile if-s3-dbfiles-dev s3 cp s3://iotaledger-dbfiles/dev/testnet_files/ testnet_files/ --force --recursive
 - cp -rf ../target iri/target
 - bash run_all_stable_tests.sh $VERSION
 - cd ..
