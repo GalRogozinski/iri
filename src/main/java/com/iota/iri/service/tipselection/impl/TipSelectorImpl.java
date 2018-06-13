@@ -3,15 +3,14 @@ package com.iota.iri.service.tipselection.impl;
 import com.iota.iri.LedgerValidator;
 import com.iota.iri.Milestone;
 import com.iota.iri.TransactionValidator;
+import com.iota.iri.conf.TipSelConfig;
 import com.iota.iri.model.Hash;
 import com.iota.iri.model.HashId;
 import com.iota.iri.service.tipselection.*;
 import com.iota.iri.storage.Tangle;
 import com.iota.iri.utils.collections.interfaces.UnIterableMap;
-import com.iota.iri.zmq.MessageQ;
 
 import java.security.InvalidAlgorithmParameterException;
-import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -46,7 +45,7 @@ public class TipSelectorImpl implements TipSelector {
                            RatingCalculator ratingCalculator,
                            Walker walkerAlpha,
                            Milestone milestone,
-                           int maxDepth) {
+                           TipSelConfig config) {
 
         this.entryPointSelector = entryPointSelector;
         this.ratingCalculator = ratingCalculator;
@@ -54,7 +53,7 @@ public class TipSelectorImpl implements TipSelector {
         this.walker = walkerAlpha;
 
         //used by walkValidator
-        this.maxDepth = maxDepth;
+        this.maxDepth = config.getMaxDepth();
         this.ledgerValidator = ledgerValidator;
         this.transactionValidator = transactionValidator;
         this.tangle = tangle;
