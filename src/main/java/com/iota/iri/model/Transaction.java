@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
  * Created by paul on 3/2/17 for iri.
  */
 public class Transaction implements Persistable {
-    public static final int SIZE = 1604;
+    public static final int SIZE = 1608;
 
     public byte[] bytes;
 
@@ -39,6 +39,7 @@ public class Transaction implements Persistable {
     public long height = 0;
     public String sender = "";
     public int snapshot;
+    public int referencedSnapshot = 0;
 
     public byte[] bytes() {
         return bytes;
@@ -47,7 +48,7 @@ public class Transaction implements Persistable {
     public void read(byte[] bytes) {
         if(bytes != null) {
             this.bytes = new byte[SIZE];
-            System.arraycopy(bytes, 0, this.bytes, 0, SIZE);
+            System.arraycopy(bytes, 0, this.bytes, 0, bytes.length);
             this.type = TransactionViewModel.FILLED_SLOT;
         }
     }
@@ -59,7 +60,8 @@ public class Transaction implements Persistable {
                         Long.BYTES * 9 + //value,currentIndex,lastIndex,timestamp,attachmentTimestampLowerBound,attachmentTimestampUpperBound,arrivalTime,height
                         Integer.BYTES * 3 + //validity,type,snapshot
                         1 + //solid
-                        sender.getBytes().length; //sender
+                        sender.getBytes().length + //sender
+                        Integer.BYTES; // referenced Snapshot
         ByteBuffer buffer = ByteBuffer.allocate(allocateSize);
         buffer.put(address.bytes());
         buffer.put(bundle.bytes());
@@ -84,6 +86,7 @@ public class Transaction implements Persistable {
         buffer.put((byte) (solid ? 1 : 0));
         buffer.put(Serializer.serialize(snapshot));
         buffer.put(sender.getBytes());
+        buffer.put(Serializer.serialize(referencedSnapshot));
         return buffer.array();
     }
 
@@ -91,6 +94,13 @@ public class Transaction implements Persistable {
     public void readMetadata(byte[] bytes) {
         int i = 0;
         if(bytes != null) {
+            // if the stored data is too small -> increase the size (database schema changed)
+            if(bytes.length < SIZE) {
+                byte[] increasedBytes = new byte[SIZE];
+                System.arraycopy(bytes, 0, increasedBytes, 0, bytes.length);
+                bytes = increasedBytes;
+            }
+
             address = new Hash(bytes, i, Hash.SIZE_IN_BYTES);
             i += Hash.SIZE_IN_BYTES;
             bundle = new Hash(bytes, i, Hash.SIZE_IN_BYTES);
@@ -135,11 +145,14 @@ public class Transaction implements Persistable {
             i++;
             snapshot = Serializer.getInteger(bytes, i);
             i += Integer.BYTES;
-            byte[] senderBytes = new byte[bytes.length - i];
+            byte[] senderBytes = new byte[bytes.length - i - Integer.BYTES];
             if (senderBytes.length != 0) {
                 System.arraycopy(bytes, i, senderBytes, 0, senderBytes.length);
             }
             sender = new String(senderBytes);
+            i += senderBytes.length;
+            referencedSnapshot = Serializer.getInteger(bytes, i);
+            i += Integer.BYTES;
             parsed = true;
         }
     }
