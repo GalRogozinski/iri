@@ -230,8 +230,8 @@ public class TransactionViewModel {
     }
 
     public byte[] getBytes() {
-        if(transaction.bytes == null || transaction.bytes.length != SIZE) {
-            transaction.bytes = new byte[SIZE];
+        if(transaction.bytes == null || transaction.bytes.length != Transaction.SIZE) {
+            transaction.bytes = new byte[Transaction.SIZE];
             if(trits != null) {
                 Converter.bytes(trits(), 0, transaction.bytes, 0, trits().length);
             }
