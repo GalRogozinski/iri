@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
  * Created by paul on 3/2/17 for iri.
  */
 public class Transaction implements Persistable {
-    public static final int SIZE = 1608;
+    public static final int SIZE = 1604;
 
     public byte[] bytes;
 
