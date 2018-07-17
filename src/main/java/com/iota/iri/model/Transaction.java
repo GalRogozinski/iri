@@ -39,6 +39,7 @@ public class Transaction implements Persistable {
     public long height = 0;
     public String sender = "";
     public int snapshot;
+    public int referencedSnapshot = 0;
 
     public byte[] bytes() {
         return bytes;
@@ -59,7 +60,8 @@ public class Transaction implements Persistable {
                         Long.BYTES * 9 + //value,currentIndex,lastIndex,timestamp,attachmentTimestampLowerBound,attachmentTimestampUpperBound,arrivalTime,height
                         Integer.BYTES * 3 + //validity,type,snapshot
                         1 + //solid
-                        sender.getBytes().length; //sender
+                        sender.getBytes().length + //sender
+                        Integer.BYTES; // referenced Snapshot
         ByteBuffer buffer = ByteBuffer.allocate(allocateSize);
         buffer.put(address.bytes());
         buffer.put(bundle.bytes());
@@ -83,6 +85,7 @@ public class Transaction implements Persistable {
         //buffer.put((byte) (confirmed ? 1:0));
         buffer.put((byte) (solid ? 1 : 0));
         buffer.put(Serializer.serialize(snapshot));
+        buffer.put(Serializer.serialize(referencedSnapshot));
         buffer.put(sender.getBytes());
         return buffer.array();
     }
@@ -135,11 +138,14 @@ public class Transaction implements Persistable {
             i++;
             snapshot = Serializer.getInteger(bytes, i);
             i += Integer.BYTES;
+            referencedSnapshot = Serializer.getInteger(bytes, i);
+            i += Integer.BYTES;
             byte[] senderBytes = new byte[bytes.length - i];
             if (senderBytes.length != 0) {
                 System.arraycopy(bytes, i, senderBytes, 0, senderBytes.length);
             }
             sender = new String(senderBytes);
+            i += senderBytes.length;
             parsed = true;
         }
     }
