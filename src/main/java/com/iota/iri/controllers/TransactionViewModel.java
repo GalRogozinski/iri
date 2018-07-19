@@ -104,7 +104,7 @@ public class TransactionViewModel {
     public TransactionViewModel(final byte[] bytes, Hash hash) throws RuntimeException {
         transaction = new Transaction();
         transaction.bytes = new byte[SIZE];
-        System.arraycopy(bytes, 0, transaction.bytes, 0, bytes.length);
+        System.arraycopy(bytes, 0, transaction.bytes, 0, SIZE);
         this.hash = hash;
         weightMagnitude = this.hash.trailingZeros();
         transaction.type = FILLED_SLOT;
