@@ -379,98 +379,76 @@ public class TransactionViewModel {
 
             transactionViewModel.updateHeights(tangle);
 
-            // trigger the update of the referenced snapshot once a tx get's solid
-            transactionViewModel.updateReferencedSnapshot(tangle);
-
             if(!transactionViewModel.isSolid()) {
-                transactionViewModel.updateSolid(true);
-                transactionViewModel.update(tangle, "solid|height");
+                int referencedMilestone = transactionViewModel.findReferencedMilestone(tangle);
+                transactionViewModel.updateSolid(true, referencedMilestone);
+                transactionViewModel.update(tangle, "solid|height|referencedMilestone");
             }
         }
     }
 
     /**
-     * This method calculates the correct referenced snapshot and updates the transaction.
-     *
-     * It get's triggered when a transaction becomes solid and just triggers the retrieval of the referenced milestone,
-     * which then traverses the graph and tries to retrieve the values (store the values when it finds them).
+     * This method calculates the correct referenced milestone and updates the transaction.
+     * The referenced milestone is recursively defined by {@link #chooseReferencedMilestone}
      *
      * @param tangle database interface
      * @throws Exception if the database update of the database fails
+     * @return the referenced milestone
      */
-    public void updateReferencedSnapshot(Tangle tangle) throws Exception {
-        // trigger the retrieval which will also cause an update
-        this.referencedSnapshot(tangle);
+    private int findReferencedMilestone(Tangle tangle) throws Exception {
+        // if the referenced snapshot is 0 -> we try to recursively determine it
+        if(transaction.referencedMilestone == 0) {
+            TransactionViewModel trunk = this.getTrunkTransaction(tangle);
+            TransactionViewModel branch = this.getBranchTransaction(tangle);
+
+            int trunkReferencedSnapshot = findReferencedMilestoneRecursively(trunk, tangle);
+            int branchReferencedSnapshot = findReferencedMilestoneRecursively(branch, tangle);
+
+            return chooseReferencedMilestone(trunkReferencedSnapshot, branchReferencedSnapshot);
+        }
+
+        // else return the stored value
+        return transaction.referencedMilestone;
     }
 
     /**
-     * This method allows to set the referenced snapshot for this transaction.
      *
-     * It first checks, if the value is already set and issues a database update if the value differs from the current
-     * one.
-     *
-     * @param tangle database interface
-     * @param referencedSnapshot milestone index that is referenced by this transaction
-     * @throws Exception if the database update of the database fails
+     * @param trunkReferencedMilestone - the referenced milestone of the trunk
+     * @param branchReferencedMilestone - the referenced milestone of the branch
+     * @return the max value of the two params
      */
-    public void referencedSnapshot(Tangle tangle, final int referencedSnapshot) throws Exception {
-        if ( referencedSnapshot != transaction.referencedSnapshot ) {
-            transaction.referencedSnapshot = referencedSnapshot;
-            update(tangle, "referencedSnapshot");
+    public static int chooseReferencedMilestone(int trunkReferencedMilestone, int branchReferencedMilestone) {
+        return Math.max(trunkReferencedMilestone, branchReferencedMilestone);
+    }
+
+    private static int findReferencedMilestoneRecursively(TransactionViewModel approvee, Tangle tangle) throws Exception {
+        int referencedMilestone = approvee.getReferencedMilestone();
+        if(referencedMilestone == 0 && !Objects.equals(approvee.getHash(), Hash.NULL_HASH)) {
+            // check if the referenced transaction is a milestone -> otherwise descend recursively
+            try {
+                MilestoneViewModel milestoneViewModel = MilestoneViewModel.fromHash(tangle, approvee.getHash());
+                referencedMilestone = milestoneViewModel.index();
+            } catch(Exception e) {
+                referencedMilestone = approvee.findReferencedMilestone(tangle);
+            }
         }
+
+        return referencedMilestone;
     }
 
     /**
      * This method allows to retrieve the referenced snapshot of this transaction.
      *
-     * It retrieves the minimum of the referenced snapshots (milestone indexes) of the branch and trunk transactions.
-     * This way we can easily identify transactions that have been in a parasitic side-tangle for a long time without
-     * seeing new milestones.
-     *
      * @return snapshot index (milestone index)
      */
-    public int referencedSnapshot(Tangle tangle) throws Exception{
-        // if the referenced snapshot is 0 -> we try to recursively determine it
-        if(transaction.referencedSnapshot == 0) {
-            // retrieve the trunk and the branch
-            TransactionViewModel trunk = this.getTrunkTransaction(tangle);
-            TransactionViewModel branch = this.getBranchTransaction(tangle);
-
-            // check if the referenced transaction is a milestone -> otherwise descend recursively
-            int trunkReferencedSnapshot;
-            if(trunk.getHash().equals(Hash.NULL_HASH)) {
-                trunkReferencedSnapshot = 0;
-            } else {
-                try {
-                    trunkReferencedSnapshot = MilestoneViewModel.fromHash(tangle, trunk.getHash()).index();
-                } catch(Exception e) {
-                    trunkReferencedSnapshot = trunk.referencedSnapshot(tangle);
-                }
-            }
-
-            // check if the referenced transaction is a milestone -> otherwise descend recursively
-            int branchReferencedSnapshot;
-            if(branch.getHash().equals(Hash.NULL_HASH)) {
-                branchReferencedSnapshot = 0;
-            } else {
-                try {
-                    branchReferencedSnapshot = MilestoneViewModel.fromHash(tangle, branch.getHash()).index();
-                } catch(Exception e) {
-                    branchReferencedSnapshot = branch.referencedSnapshot(tangle);
-                }
-            }
-
-            // set the referenced milestone to the smaller one of both values
-            this.referencedSnapshot(tangle, Math.max(trunkReferencedSnapshot, branchReferencedSnapshot));
-        }
-
-        // return the stored value
-        return transaction.referencedSnapshot;
+    public int getReferencedMilestone() {
+        return transaction.referencedMilestone;
     }
 
-    public boolean updateSolid(boolean solid) throws Exception {
+    public boolean updateSolid(boolean solid, int referencedMilestone) {
         if(solid != transaction.solid) {
             transaction.solid = solid;
+            transaction.referencedMilestone = referencedMilestone;
             return true;
         }
         return false;

@@ -239,14 +239,18 @@ public class TransactionValidator {
     private boolean quickSetSolid(final TransactionViewModel transactionViewModel) throws Exception {
         if(!transactionViewModel.isSolid()) {
             boolean solid = true;
-            if (!checkApproovee(transactionViewModel.getTrunkTransaction(tangle))) {
+            TransactionViewModel trunkTransaction = transactionViewModel.getTrunkTransaction(tangle);
+            if (!checkApproovee(trunkTransaction)) {
                 solid = false;
             }
-            if (!checkApproovee(transactionViewModel.getBranchTransaction(tangle))) {
+            TransactionViewModel branchTransaction = transactionViewModel.getBranchTransaction(tangle);
+            if (!checkApproovee(branchTransaction)) {
                 solid = false;
             }
             if(solid) {
-                transactionViewModel.updateSolid(true);
+                int referencedMilestone = TransactionViewModel.chooseReferencedMilestone(
+                        trunkTransaction.getReferencedMilestone(), branchTransaction.getReferencedMilestone());
+                transactionViewModel.updateSolid(true, referencedMilestone);
                 transactionViewModel.updateHeights(tangle);
                 return true;
             }
