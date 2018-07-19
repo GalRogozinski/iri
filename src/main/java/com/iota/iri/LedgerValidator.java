@@ -15,6 +15,8 @@ import java.util.*;
  */
 public class LedgerValidator {
 
+    public static final int MAX_REF_MILESTONE_DEPTH = 15;
+
     private final Logger log = LoggerFactory.getLogger(LedgerValidator.class);
     private final Tangle tangle;
     private final Milestone milestone;
@@ -69,6 +71,9 @@ public class LedgerValidator {
                         transactionRequester.requestTransaction(transactionViewModel.getHash(), milestone);
                         return null;
 
+                    } else if (transactionViewModel.isSolid() && isApprovingOldTransactions(transactionViewModel)) {
+                        throw new RuntimeException(
+                                "Trying to compute ledger state with transactions pointing too much into the past");
                     } else {
 
                         if (transactionViewModel.getCurrentIndex() == 0) {
@@ -127,6 +132,10 @@ public class LedgerValidator {
         }
         log.debug("Confirmed transactions = " + numberOfConfirmedTransactions);
         return state;
+    }
+
+    private boolean isApprovingOldTransactions(TransactionViewModel transactionViewModel) {
+        return milestone.latestMilestoneIndex - transactionViewModel.getReferencedMilestone() > MAX_REF_MILESTONE_DEPTH;
     }
 
     /**
