@@ -72,8 +72,10 @@ public class LedgerValidator {
                         return null;
 
                     } else if (transactionViewModel.isSolid() && isApprovingOldTransactions(transactionViewModel)) {
-                        throw new RuntimeException(
-                                "Trying to compute ledger state with transactions pointing too much into the past");
+                        throw new RuntimeException(String.format(
+                                "Trying to compute ledger state with transaction %s pointing too much into the past." +
+                                        "referencing milestone index : %d", transactionViewModel.getHash(),
+                                transactionViewModel.getReferencedMilestone()));
                     } else {
 
                         if (transactionViewModel.getCurrentIndex() == 0) {

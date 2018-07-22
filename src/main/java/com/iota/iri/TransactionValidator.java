@@ -126,7 +126,7 @@ public class TransactionValidator {
         if(TransactionViewModel.fromHash(tangle, hash).isSolid()) {
             return true;
         }
-        Set<Hash> analyzedHashes = new HashSet<>(Collections.singleton(Hash.NULL_HASH));
+        Set<Hash> analyzedHashes = new LinkedHashSet<>(Collections.singleton(Hash.NULL_HASH));
         boolean solid = true;
         final Queue<Hash> nonAnalyzedTransactions = new LinkedList<>(Collections.singleton(hash));
         Hash hashPointer;
