@@ -398,23 +398,34 @@ public class TransactionViewModel {
      */
     private int findReferencedMilestone(Tangle tangle) throws Exception {
         // if the referenced snapshot is 0 -> we try to recursively determine it
-        if (transaction.referencedMilestone == 0 & !Objects.equals(this.getHash(), Hash.NULL_HASH)) {
+        if (getReferencedMilestone() == 0 & !Objects.equals(this.getHash(), Hash.NULL_HASH)) {
             Deque<TransactionViewModel> stack = new ArrayDeque<>();
             stack.push(this);
 
             while (CollectionUtils.isNotEmpty(stack)) {
                 TransactionViewModel current = stack.peek();
                 TransactionViewModel trunk = current.getTrunkTransaction(tangle);
-                int trunkReferencedMilestone = findReferencedMilestoneStep(trunk, tangle, stack);
+                boolean trunkReferencedMilestone = findReferencedMilestoneStep(trunk, tangle);
 
-                TransactionViewModel branch = this.getBranchTransaction(tangle);
-                int branchReferencedMilestone = findReferencedMilestoneStep(branch, tangle, stack);
+                TransactionViewModel branch = current.getBranchTransaction(tangle);
+                boolean branchReferencedMilestone = findReferencedMilestoneStep(branch, tangle);
 
-                current.transaction.referencedMilestone = chooseReferencedMilestone(trunkReferencedMilestone,
-                        branchReferencedMilestone);
+                if (!trunkReferencedMilestone) {
+                    stack.push(trunk);
+                }
+
+                if (!branchReferencedMilestone) {
+                    stack.push(branch);
+                }
+
+                if (trunkReferencedMilestone && branchReferencedMilestone) {
+                    current.setReferencedMilestone(tangle, chooseReferencedMilestone(trunk.getReferencedMilestone(),
+                            branch.getReferencedMilestone()));
+                    stack.pop();
+                }
             }
         }
-        return transaction.referencedMilestone;
+        return getReferencedMilestone();
     }
 
 
@@ -427,22 +438,22 @@ public class TransactionViewModel {
         return Math.max(trunkReferencedMilestone, branchReferencedMilestone);
     }
 
-    private static int findReferencedMilestoneStep(TransactionViewModel approvee, Tangle tangle, Deque stack) throws Exception {
+    private static boolean findReferencedMilestoneStep(TransactionViewModel approvee, Tangle tangle) throws Exception {
         int approveeReferencedMilestone = approvee.getReferencedMilestone();
+        if (Objects.equals(approvee.getHash(), Hash.NULL_HASH)) {
+            approveeReferencedMilestone = 1;
+        }
         if(approveeReferencedMilestone == 0 && !Objects.equals(approvee.getHash(), Hash.NULL_HASH)) {
             // check if the referenced transaction is a milestone -> otherwise descend recursively
             try {
                 MilestoneViewModel milestoneViewModel = MilestoneViewModel.fromHash(tangle, approvee.getHash());
                 approveeReferencedMilestone = milestoneViewModel.index();
-                stack.pop();
             } catch(Exception e) {
-                stack.push(approvee);
+                return false;
             }
         }
-        else {
-            stack.pop();
-        }
-        return approveeReferencedMilestone;
+        approvee.setReferencedMilestone(tangle, approveeReferencedMilestone);
+        return true;
     }
 
     /**
