@@ -76,6 +76,7 @@ public class WalkValidatorImpl implements WalkValidator {
     }
 
     private boolean belowMaxDepth(Hash tip, int depth) throws Exception {
+        final int MAX_ANALYZED_TXS = 100_000;
         //if tip is confirmed stop
         if (TransactionViewModel.fromHash(tangle, tip).snapshotIndex() >= depth) {
             return false;
@@ -85,6 +86,13 @@ public class WalkValidatorImpl implements WalkValidator {
         Set<Hash> analyzedTransactions = new HashSet<>();
         Hash hash;
         while ((hash = nonAnalyzedTransactions.poll()) != null) {
+            if (FAILED_BELOW_MAX_DEPTH_CACHE.contains(hash)) {
+                return false;
+            }
+            if (analyzedTransactions.size() == MAX_ANALYZED_TXS) {
+                updateCache(analyzedTransactions);
+                return false;
+            }
             if (analyzedTransactions.add(hash)) {
                 TransactionViewModel transaction = TransactionViewModel.fromHash(tangle, hash);
                 if (transaction.snapshotIndex() != 0 && transaction.snapshotIndex() < depth) {
@@ -100,5 +108,16 @@ public class WalkValidatorImpl implements WalkValidator {
         }
         maxDepthOkMemoization.add(tip);
         return false;
+    }
+
+    private void updateCache(Set<Hash> analyzedTransactions) {
+        if (!FAILED_BELOW_MAX_DEPTH_CACHE.canCollectionBeFullyAdded(analyzedTransactions)) {
+            Iterator<Hash> iterator = FAILED_BELOW_MAX_DEPTH_CACHE.iterator();
+            for (int i = 0; i < analyzedTransactions.size(); i++) {
+                iterator.next();
+                iterator.remove();
+            }
+        }
+        FAILED_BELOW_MAX_DEPTH_CACHE.addAll(analyzedTransactions);
     }
 }
