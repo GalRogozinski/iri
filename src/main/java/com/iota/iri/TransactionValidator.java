@@ -1,15 +1,14 @@
 package com.iota.iri;
 
 import com.iota.iri.controllers.TipsViewModel;
+import com.iota.iri.controllers.TransactionViewModel;
 import com.iota.iri.hash.Curl;
 import com.iota.iri.hash.Sponge;
 import com.iota.iri.hash.SpongeFactory;
-import com.iota.iri.network.TransactionRequester;
-import com.iota.iri.controllers.TransactionViewModel;
 import com.iota.iri.model.Hash;
-import com.iota.iri.zmq.MessageQ;
+import com.iota.iri.network.TransactionRequester;
 import com.iota.iri.storage.Tangle;
-
+import com.iota.iri.zmq.MessageQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -239,13 +238,17 @@ public class TransactionValidator {
     private boolean quickSetSolid(final TransactionViewModel transactionViewModel) throws Exception {
         if(!transactionViewModel.isSolid()) {
             boolean solid = true;
-            if (!checkApproovee(transactionViewModel.getTrunkTransaction(tangle))) {
+            TransactionViewModel trunkTransaction = transactionViewModel.getTrunkTransaction(tangle);
+            if (!checkApproovee(trunkTransaction)) {
                 solid = false;
             }
-            if (!checkApproovee(transactionViewModel.getBranchTransaction(tangle))) {
+            TransactionViewModel branchTransaction = transactionViewModel.getBranchTransaction(tangle);
+            if (!checkApproovee(branchTransaction)) {
                 solid = false;
             }
             if(solid) {
+                transactionViewModel.referencedSnapshot(tangle, TransactionViewModel.chooseReferencedSnapshot(
+                        trunkTransaction.referencedSnapshot(), branchTransaction.referencedSnapshot()));
                 transactionViewModel.updateSolid(true);
                 transactionViewModel.updateHeights(tangle);
                 return true;
