@@ -142,12 +142,14 @@ public class WalkValidatorImplTest {
     public void belowMaxDepthWithFreshMilestone() throws Exception {
         TransactionViewModel tx = TransactionTestUtils.createBundleHead(0);
         tx.store(tangle);
-        tx.setSnapshot(tangle, 92);
+        tx.setSnapshot(tangle, 85);
+        tx.referencedSnapshot(tangle, 95);
         Hash hash = tx.getHash();
         for (int i = 0; i < 4 ; i++) {
             tx = new TransactionViewModel(TransactionViewModelTest.getRandomTransactionWithTrunkAndBranch(hash, hash), TransactionViewModelTest.getRandomTransactionHash());
             TransactionTestUtils.setLastIndex(tx,0);
             TransactionTestUtils.setCurrentIndex(tx,0);
+            tx.referencedSnapshot(tangle, 85);
             tx.updateSolid(true);
             hash = tx.getHash();
             tx.store(tangle);

@@ -82,7 +82,7 @@ public class WalkValidatorImpl implements WalkValidator {
         } else if (!transactionViewModel.isSolid()) {
             log.debug("Validation failed: {} is not solid", transactionHash);
             return false;
-        } else if (belowMaxDepth(transactionViewModel.getHash(), milestone.latestSolidSubtangleMilestoneIndex - maxDepth)) {
+        } else if (belowMaxDepth(transactionViewModel, milestone.latestSolidSubtangleMilestoneIndex - maxDepth)) {
             log.debug("Validation failed: {} is below max depth", transactionHash);
             return false;
         } else if (!ledgerValidator.updateDiff(myApprovedHashes, myDiff, transactionViewModel.getHash())) {
@@ -92,13 +92,14 @@ public class WalkValidatorImpl implements WalkValidator {
         return true;
     }
 
-    private boolean belowMaxDepth(Hash tip, int lowerAllowedSnapshotIndex) throws Exception {
+    private boolean belowMaxDepth(TransactionViewModel tip, int lowerAllowedSnapshotIndex) throws Exception {
         //if tip is confirmed stop
-        if (TransactionViewModel.fromHash(tangle, tip).snapshotIndex() >= lowerAllowedSnapshotIndex) {
+        if (tip.snapshotIndex() >= lowerAllowedSnapshotIndex) {
             return false;
         }
+        Hash tipHash = tip.getHash();
         //if tip unconfirmed, check if any referenced tx is confirmed below maxDepth
-        Queue<Hash> nonAnalyzedTransactions = new LinkedList<>(Collections.singleton(tip));
+        Queue<Hash> nonAnalyzedTransactions = new LinkedList<>(Collections.singleton(tipHash));
         Set<Hash> analyzedTransactions = new HashSet<>();
         Hash hash;
         while ((hash = nonAnalyzedTransactions.poll()) != null) {
@@ -124,6 +125,13 @@ public class WalkValidatorImpl implements WalkValidator {
                     return true;
                 }
                 if (transaction.snapshotIndex() == 0) {
+                    int referencedSnapshot = transaction.referencedSnapshot();
+                    if (referencedSnapshot < lowerAllowedSnapshotIndex) {
+                        log.debug("failed below max depth because of reaching a tx that references an old milestone {}",
+                                referencedSnapshot);
+                        updateCache(analyzedTransactions);
+                        return true;
+                    }
                     if (!maxDepthOkMemoization.contains(hash)) {
                         nonAnalyzedTransactions.offer(transaction.getTrunkTransactionHash());
                         nonAnalyzedTransactions.offer(transaction.getBranchTransactionHash());
@@ -131,7 +139,7 @@ public class WalkValidatorImpl implements WalkValidator {
                 }
             }
         }
-        maxDepthOkMemoization.add(tip);
+        maxDepthOkMemoization.add(tipHash);
         return false;
     }
 
