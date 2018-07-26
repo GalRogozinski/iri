@@ -1,7 +1,5 @@
 package com.iota.iri.controllers;
 
-import java.util.*;
-
 import com.iota.iri.conf.Configuration;
 import com.iota.iri.model.*;
 import com.iota.iri.storage.Indexable;
@@ -9,6 +7,8 @@ import com.iota.iri.storage.Persistable;
 import com.iota.iri.storage.Tangle;
 import com.iota.iri.utils.Converter;
 import com.iota.iri.utils.Pair;
+
+import java.util.*;
 
 public class TransactionViewModel {
 
@@ -525,8 +525,12 @@ public class TransactionViewModel {
             }
         }
 
-        // update the referencedSnapshot of the transaction to the bigger one of both
-        transaction.referencedSnapshot(tangle, Math.max(referencedSnapshotOfBranch, referencedSnapshotOfTrunk));
+        // update the referencedSnapshot of the transaction to the smaller one of both
+        transaction.referencedSnapshot(tangle, chooseReferencedSnapshot(referencedSnapshotOfBranch, referencedSnapshotOfTrunk));
+    }
+
+    public static int chooseReferencedSnapshot(int referencedSnapshotOfBranch, int referencedSnapshotOfTrunk) {
+        return Math.min(referencedSnapshotOfBranch, referencedSnapshotOfTrunk);
     }
 
     /**
