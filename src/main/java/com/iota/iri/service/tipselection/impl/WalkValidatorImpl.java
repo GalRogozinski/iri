@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Implementation of <tt>WalkValidator</tt> that checks consistency of the ledger as part of validity checks.
@@ -30,6 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WalkValidatorImpl implements WalkValidator {
 
     public static final int INITIAL_CACHE_CAPACITY = 10_000;
+    private static final Executor solidifier = Executors.newSingleThreadExecutor();
     //As long as tip selection is synchronized we are fine with the collection not being thread safe
     static BoundedSet<Hash> failedBelowMaxDepthCache;
     private int maxAnalyzedTxs;
@@ -81,6 +84,13 @@ public class WalkValidatorImpl implements WalkValidator {
             return false;
         } else if (!transactionViewModel.isSolid()) {
             log.debug("Validation failed: {} is not solid", transactionHash);
+            solidifier.execute(() -> {
+                try {
+                    transactionValidator.checkSolidity(transactionViewModel.getHash(), false);
+                } catch (Exception e) {
+                    log.error("Error occured while attempting to get solid", e);
+                }
+            });
             return false;
         } else if (belowMaxDepth(transactionViewModel.getHash(), milestone.latestSolidSubtangleMilestoneIndex - maxDepth)) {
             log.debug("Validation failed: {} is below max depth", transactionHash);
