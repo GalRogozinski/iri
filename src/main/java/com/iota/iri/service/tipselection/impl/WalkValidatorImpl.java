@@ -126,8 +126,8 @@ public class WalkValidatorImpl implements WalkValidator {
 
             if (analyzedTransactions.add(hash)) {
                 TransactionViewModel transaction = TransactionViewModel.fromHash(tangle, hash);
-                if ((transaction.snapshotIndex() != 0 || Objects.equals(Hash.NULL_HASH, transaction.getHash()))
-                        && transaction.snapshotIndex() < lowerAllowedSnapshotIndex) {
+                if ((transaction.snapshotIndex() != 0 && transaction.snapshotIndex() < lowerAllowedSnapshotIndex)
+                        || Objects.equals(Hash.NULL_HASH, transaction.getHash())) {
                     updateCache(analyzedTransactions);
                     log.debug("failed below max depth because of reaching a tx below the allowed snapshot index {}",
                             lowerAllowedSnapshotIndex);
