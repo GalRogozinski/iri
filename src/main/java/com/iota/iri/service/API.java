@@ -445,6 +445,7 @@ public class API {
 
 
             if (!txVM.isSolid()) {
+                instance.transactionValidator.checkSolidity(txVM.getHash(), false);
                 state = false;
                 info = "tails are not solid (missing a referenced tx): " + transaction;
                 break;
