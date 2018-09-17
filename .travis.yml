@@ -30,7 +30,6 @@ script:
   - git checkout -f dev
   - git checkout $build_head
   - echo $TRAVIS_PULL_REQUEST
-  - echo $TRAVIS_PULL_REQUEST_BRANCH
   - git merge $TRAVIS_PULL_REQUEST_BRANCH
   - mvn integration-test -Dlogging-level=INFO
   #run jar sanity tests
