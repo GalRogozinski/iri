@@ -45,6 +45,8 @@ public class Iota {
     public final TipSelector tipsSelector;
 
     public Iota(IotaConfig configuration) throws IOException {
+        testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
+                testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest
         this.configuration = configuration;
         Snapshot initialSnapshot = Snapshot.init(configuration).clone();
         tangle = new Tangle();
