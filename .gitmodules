@@ -1,0 +1,3 @@
+[submodule "iri-regression"]
+	path = iri-regression
+	url = git@github.com:iotaledger/iri-regression.git
