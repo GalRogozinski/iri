@@ -1,16 +1,18 @@
 package com.iota.iri.conf;
 
+import com.iota.iri.IRI;
+import com.iota.iri.utils.IotaUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.iota.iri.IRI;
-import com.iota.iri.utils.IotaUtils;
-import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 
 /*
   Note: the fields in this class are being deserialized from Jackson so they must follow Java Bean convention.
@@ -790,8 +792,8 @@ public abstract class BaseIotaConfig implements IotaConfig {
         String SNAPSHOT_SIG_FILE = "/snapshotMainnet.sig";
         String PREVIOUS_EPOCHS_SPENT_ADDRESSES_TXT =
                 "/previousEpochsSpentAddresses1.txt /previousEpochsSpentAddresses2.txt";
-        long GLOBAL_SNAPSHOT_TIME = 1537203600;
-        int MILESTONE_START_INDEX = 774_805;
+        long GLOBAL_SNAPSHOT_TIME = 1543217046;
+        int MILESTONE_START_INDEX = 896_527;
         int NUM_KEYS_IN_MILESTONE = 20;
         int MAX_ANALYZED_TXS = 20_000;
     }
