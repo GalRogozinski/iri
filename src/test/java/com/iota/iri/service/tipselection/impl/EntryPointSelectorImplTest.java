@@ -1,6 +1,7 @@
 package com.iota.iri.service.tipselection.impl;
 
-import com.iota.iri.Milestone;
+import com.iota.iri.MilestoneTracker;
+import com.iota.iri.conf.MainnetConfig;
 import com.iota.iri.hash.SpongeFactory;
 import com.iota.iri.model.Hash;
 import com.iota.iri.model.IntegerIndex;
@@ -20,7 +21,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class EntryPointSelectorImplTest {
 
     @Mock
-    private Milestone milestone;
+    private MilestoneTracker milestoneTracker;
     @Mock
     private Tangle tangle;
 
@@ -30,7 +31,7 @@ public class EntryPointSelectorImplTest {
         mockTangleBehavior(milestoneHash);
         mockMilestoneTrackerBehavior(0, Hash.NULL_HASH);
 
-        EntryPointSelector entryPointSelector = new EntryPointSelectorImpl(tangle, milestone, false, 0);
+        EntryPointSelector entryPointSelector = new EntryPointSelectorImpl(tangle, milestoneTracker, new MainnetConfig());
         Hash entryPoint = entryPointSelector.getEntryPoint(10);
 
         Assert.assertEquals("The entry point should be the milestone in the Tangle", milestoneHash, entryPoint);
@@ -40,7 +41,7 @@ public class EntryPointSelectorImplTest {
     public void testEntryPointWithoutTangleData() throws Exception {
         mockMilestoneTrackerBehavior(0, Hash.NULL_HASH);
 
-        EntryPointSelector entryPointSelector = new EntryPointSelectorImpl(tangle, milestone, false, 0);
+        EntryPointSelector entryPointSelector = new EntryPointSelectorImpl(tangle, milestoneTracker, new MainnetConfig());
         Hash entryPoint = entryPointSelector.getEntryPoint(10);
 
         Assert.assertEquals("The entry point should be the last tracked solid milestone", Hash.NULL_HASH, entryPoint);
@@ -48,8 +49,8 @@ public class EntryPointSelectorImplTest {
 
 
     private void mockMilestoneTrackerBehavior(int latestSolidSubtangleMilestoneIndex, Hash latestSolidSubtangleMilestone) {
-        milestone.latestSolidSubtangleMilestoneIndex = latestSolidSubtangleMilestoneIndex;
-        milestone.latestSolidSubtangleMilestone = latestSolidSubtangleMilestone;
+        milestoneTracker.latestSolidSubtangleMilestoneIndex = latestSolidSubtangleMilestoneIndex;
+        milestoneTracker.latestSolidSubtangleMilestone = latestSolidSubtangleMilestone;
     }
 
     private void mockTangleBehavior(Hash milestoneModelHash) throws Exception {

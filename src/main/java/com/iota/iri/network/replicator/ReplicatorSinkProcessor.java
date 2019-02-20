@@ -1,15 +1,15 @@
 package com.iota.iri.network.replicator;
 
+import com.iota.iri.network.TCPNeighbor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.util.zip.CRC32;
-
-import com.iota.iri.network.TCPNeighbor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 class ReplicatorSinkProcessor implements Runnable {
 
@@ -91,12 +91,12 @@ class ReplicatorSinkProcessor implements Runnable {
                                             try {
                                                 CRC32 crc32 = new CRC32();                                        
                                                 crc32.update(message.array());
-                                                String crc32_string = Long.toHexString(crc32.getValue());
-                                                while (crc32_string.length() < CRC32_BYTES) {
-                                                    crc32_string = "0"+crc32_string;
+                                                String crc32String = Long.toHexString(crc32.getValue());
+                                                while (crc32String.length() < CRC32_BYTES) {
+                                                    crc32String = "0"+crc32String;
                                                 }
                                                 out.write(message.array());
-                                                out.write(crc32_string.getBytes());
+                                                out.write(crc32String.getBytes());
                                                 out.flush();
                                                 neighbor.incSentTransactions();
                                             } catch (IOException e2) {
@@ -124,7 +124,7 @@ class ReplicatorSinkProcessor implements Runnable {
             if (reason == null || reason.equals("null")) {
                 reason = "closed";
             }
-            log.error("***** NETWORK ALERT ***** No sink to host {}:{}, reason: {}", remoteAddress, neighbor.getPort(),
+            log.error("***** NETWORK ALERT ***** No sink to apiHost {}:{}, reason: {}", remoteAddress, neighbor.getPort(),
                     reason);
             synchronized (neighbor) {
                 Socket sourceSocket = neighbor.getSource();
