@@ -23,7 +23,7 @@ matrix:
 script:
   #run tests and integration tests
   # see  https://stackoverflow.com/questions/34405047/how-do-you-merge-into-another-branch-using-travis-with-git-commands?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-  - build_head=$(git rev-parse HEAD) 
+  - build_head=$(git rev-parse HEAD)
   - git config --replace-all remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
   - git fetch origin $TRAVIS_BRANCH
   - git checkout -f $TRAVIS_BRANCH
@@ -59,7 +59,7 @@ after_success:
 deploy:
 - provider: releases
   api_key:
-    secure: "j+KolvRrsinh6OTqjli1y5I4gdPdD5MT6RFahVRrznxtcb2t7y6x41PknkI/8BksxLJKKQ1f40L307Aquzih9FmLesWcrYrCOS/B40dlCc3uV8DEZKhZF+QWqvsDpZ0EfiluGFljqGpxwngb/miNObqQzQvzpdUXBpZcuzxgqziynJD6jt3TYbNn544m/i4cWbb++b1h2Bm+jwELzJcf6/CZ1TxUh49vdM4S6yTpvnKwg4NLeH6g8s9oYEN1iwYtQokGKlH/emBZDsqDtF4KH7kXPpEKTcho4nH504XWJpanVAQ02Pha4SAnyVu4rKiLH4e6v99xZOBLVTH/qkvlwzvkNYr2xS5q9T9G7DZBRE+oc2MIbcnuSkhHwrUcmf2Hc0zCIP4RLCXAUuVlNEmIQUKgTezVzaqaEQLsa+EFIoosS+8pT/kVnaLbwxrITUmgM246+gvzMcVg8SmyPvVj6iRxfR6spTd7V2M0ePdqWlCL8P9RY4YrtxR2yJ6/3C0XNf29t+s/r1jat8fwWp8Gf7GiCaJEYG9VO24Chhi+MZCKBJnmx5G/98zvLw3f6a1FsEGZrw9RhF2vJKK6sD3rIvNkUsYmf0OhM7bf0NceFMGTJ/mFzM/JX0OHMtIyAvUfyyPVbQkIHNcGBgQMZasx07K3fjcn2lqv4FbHVi3HbdM="
+    secure: Y1jaz+WKupQio7h9jy7al9Bljjbm9uSzKSi4MDibqYbgwFLXY6jq7vvlZCJFmIRdAm6r7p/PUlEJjng4jOrqk3R4fj8PgYTEBNg9dPCrJuOV9imlyk2lq+A5QbhI4P543n65RYe68TWEB7nMSVvmnZeykDclSL1bu1WjcW92MQwPcyBolDxL1pGeqrvhuz+kysfRLau10l8i2j4YinDwC3PwMV3GzuagPqGelmnHoi1CPLBW6hRqAnlf8wWtI21zdPKCTDXsGuiqHK4CPpgImD8uTzEcUjz2IgjwFGfDH5YkYM43dZOJuBGXD5+fWsmhCl1MjOHAitjitafPmrY2+bszKfGqOmtNwcJFINAqSBpW3iomYnkp+7oWtFaDbRfBYDNsTqJkYg0xUwY7R6kAwHL2wMwhHpG+6AIyLKQcBrWwlfHrorpZHZA//S643CpBqBADHFvFZF9A96mMR8kTlJgzUNPR9HaYwgiBRbHqB01kVsHBlD/2kXF0sgo1xMXXIW+t4VQzK4JqyFNe0q8exxD/do1lAnUc+r0NRzm07l6qy/Ck1ot516DwWKN1yr/fVJC93A2+h+tbBaNmLyRRReRZxYvKmrPs1xaGX5OjgNQaKzeeaakwGQHNpsnf0WGuhFFztkW8fnglV8BDBRvrehustLed7kjB2W31V6IpCLM=
   file_glob: true
   file: target/*.jar*
   skip_cleanup: true
@@ -72,7 +72,7 @@ deploy:
     - mvn versions:set -DnewVersion=$VERSION
     - mvn package -P build-extras -Dlogging-level=INFO
   on:
-    tags: true
+    branch: versioning-travis
     repo: GalRogozinski/iri
 
 env:
