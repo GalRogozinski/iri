@@ -73,9 +73,9 @@ deploy:
     - mvn package -P build-extras -Dlogging-level=INFO
   on:
     tags: true
-    repo: iotaledger/iri
+    repo: GalRogozinski/iri
     branch:
-    - master
+    - versioning-travis
 env:
   global:
   - secure: oJutGSe5KK3ymwSvohFZ89UL7XaNlXH6fdO2nBEYbk5KyYuQ1Wm+h6+N/05EbwxwDK9dEiF73ZJh76sZ3IWKjRC8VWjUAz+8p38hGvQwByrVsJkrbs5SA4wA4XnyvEqyMV3yqbcgRNbMlIvj7ubUbxMizz7MA7plnumrnx9ejPG1WP4rNgzUA3XcBWHdITyOSg9rSMBJzMZ9CN1Dv+1SxZV+GlkyWN8n1Cshkq2TnNl1oRZqGKs7O0ma1dN0hUKtBa80AsCTjH8ojZFJU92gmkvAWDw5BTSZ8mhX9sZcbBYT8SnQxNDrf51HJ+K7hvdpFbsy5Z0g24cNJkA8lfUnzXFznZ/PH4hm8MeVWjRiWdE4VZr47iYzJcs0brOHSeab6fBoeTPS5899Q3V+yAw6CahfvOBthuF3Ymy+fZXoDO5242PSWXXsGwFqK7r/gT0iwJZxMBI/UUWsP/s7J/CWux8ftwbOdSbs4XdQZsuqxzKEKDDwU0FTytantsMS/vcgI41K5azyY4tbkixzydaBPvhimkflaWcuZb//mXcntitgyenaSwfkLX5pD5l1srVzSliyabnH7AprLOm1B9DBfk2leI2XgGJg/Q/GrVtcjcl1FU0aXBFhLrp3BkK7chlG2v/Eacr8Pb6NOQHORyq64n2prF6zvExX0aadOddefoA=
