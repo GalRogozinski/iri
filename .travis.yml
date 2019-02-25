@@ -74,6 +74,7 @@ deploy:
   on:
     branch: versioning-travis
     repo: GalRogozinski/iri
+    tags: true
 
 env:
   global:
