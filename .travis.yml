@@ -62,7 +62,7 @@ deploy:
     secure: Y1jaz+WKupQio7h9jy7al9Bljjbm9uSzKSi4MDibqYbgwFLXY6jq7vvlZCJFmIRdAm6r7p/PUlEJjng4jOrqk3R4fj8PgYTEBNg9dPCrJuOV9imlyk2lq+A5QbhI4P543n65RYe68TWEB7nMSVvmnZeykDclSL1bu1WjcW92MQwPcyBolDxL1pGeqrvhuz+kysfRLau10l8i2j4YinDwC3PwMV3GzuagPqGelmnHoi1CPLBW6hRqAnlf8wWtI21zdPKCTDXsGuiqHK4CPpgImD8uTzEcUjz2IgjwFGfDH5YkYM43dZOJuBGXD5+fWsmhCl1MjOHAitjitafPmrY2+bszKfGqOmtNwcJFINAqSBpW3iomYnkp+7oWtFaDbRfBYDNsTqJkYg0xUwY7R6kAwHL2wMwhHpG+6AIyLKQcBrWwlfHrorpZHZA//S643CpBqBADHFvFZF9A96mMR8kTlJgzUNPR9HaYwgiBRbHqB01kVsHBlD/2kXF0sgo1xMXXIW+t4VQzK4JqyFNe0q8exxD/do1lAnUc+r0NRzm07l6qy/Ck1ot516DwWKN1yr/fVJC93A2+h+tbBaNmLyRRReRZxYvKmrPs1xaGX5OjgNQaKzeeaakwGQHNpsnf0WGuhFFztkW8fnglV8BDBRvrehustLed7kjB2W31V6IpCLM=
   file_glob: true
   file: target/*.jar*
-  skip_cleanup: true
+  skip_cleanup: false
   before_deploy: openssl aes-256-cbc -K $encrypted_5a15fa813cca_key -iv $encrypted_5a15fa813cca_iv -in codesigning.asc.enc -out codesigning.asc -d && gpg --fast-import codesigning.asc
   deploy:
     - ls
