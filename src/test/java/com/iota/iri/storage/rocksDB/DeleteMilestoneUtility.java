@@ -56,26 +56,14 @@ public class DeleteMilestoneUtility {
 
         persistPairs.add(new Pair<>(milestoneBundle, Bundle.class));
 
+        persistPairs.add(new Pair<>(hash1, Approvee.class));
+        persistPairs.add(new Pair<>(hash2, Approvee.class));
+
         persistPairs.add(new Pair<>(hash1, ObsoleteTag.class));
         persistPairs.add(new Pair<>(hash2, ObsoleteTag.class));
 
         persistPairs.add(new Pair<>(hash1, Tag.class));
         persistPairs.add(new Pair<>(hash2, Tag.class));
-
-        rocksDBPersistenceProvider.deleteBatch(persistPairs);
-    }
-
-    @Test
-    public void deleteApprovee() throws Exception {
-        Indexable hash1 = HashFactory.TRANSACTION.create("XTAKKEXASAOXQPMWUJWHWPNYVWRPASYUFVVXQGGYXKTVJZARUCXIZVONNUKLO9OSVEIBOQTAXJZR9F999");
-        Indexable hash2 = HashFactory.TRANSACTION.create("JDFDLDHNWTMALVJHQLI9ZJFWCWRLEBMH9OPHEWCNCPRLQAEOKNVKPOBXZWCBSJABIWLHXYVBWYC9IU999");
-        Hash cooAddress = HashFactory.ADDRESS.create(TestnetConfig.Defaults.COORDINATOR_ADDRESS);
-        Hash milestoneBundle = HashFactory.BUNDLE.create("ACDPJMQRDPRQYEUMPRMHPWAEABHHCBU9QDXETIQTKJH9FDAQYJHXMIC9EJSNZOTHVWYDHKGIAHZSMYXDW");
-
-        List<Pair<Indexable, ? extends Class<? extends Persistable>>> persistPairs = new ArrayList<>();
-
-        persistPairs.add(new Pair<>(hash1, Approvee.class));
-        persistPairs.add(new Pair<>(hash2, Approvee.class));
 
         rocksDBPersistenceProvider.deleteBatch(persistPairs);
     }
