@@ -20,7 +20,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class DeleteMilestoneUtility {
+public class DeleteMilestoneUtilityTest {
 
     private static RocksDBPersistenceProvider rocksDBPersistenceProvider;
     private static String dbPath = "testnetdb", dbLogPath = "milestonedeletelog";
