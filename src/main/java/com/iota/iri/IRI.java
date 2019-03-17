@@ -52,13 +52,13 @@ public class IRI {
      * @param args Configuration arguments. See {@link BaseIotaConfig} for a list of all options.
      * @throws Exception If we fail to start the IRI launcher.
      */
-    public static void main(String[] args) throws Exception {
-        // Logging is configured first before any references to Logger or LoggerFactory.
-        // Any public method or field accessors needed in IRI should be put in IRI and then delegate to IRILauncher. 
-        // That ensures that future code does not need to know about this setup.
-        configureLogging();
-        IRILauncher.main(args);
-    }
+//    public static void main(String[] args) throws Exception {
+//        // Logging is configured first before any references to Logger or LoggerFactory.
+//        // Any public method or field accessors needed in IRI should be put in IRI and then delegate to IRILauncher.
+//        // That ensures that future code does not need to know about this setup.
+//        configureLogging();
+//        IRILauncher.main(args);
+//    }
 
     private static void configureLogging() {
         String config = System.getProperty("logback.configurationFile");
