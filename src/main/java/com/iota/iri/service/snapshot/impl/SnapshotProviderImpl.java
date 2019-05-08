@@ -268,7 +268,7 @@ public class SnapshotProviderImpl implements SnapshotProvider {
                         SNAPSHOT_PUBKEY_DEPTH,
                         SNAPSHOT_INDEX
                 )) {
-                    throw new SnapshotException("the snapshot signature is invalid");
+                    throw new SnapshotException("the snapshot signature is invalid");;
                 }
             } catch (IOException e) {
                 throw new SnapshotException("failed to validate the signature of the builtin snapshot file", e);
