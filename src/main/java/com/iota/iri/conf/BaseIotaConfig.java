@@ -479,7 +479,6 @@ public abstract class BaseIotaConfig implements IotaConfig {
         this.pDropTransaction = pDropTransaction;
     }
 
-    @Override
     public double getpSelectMilestoneChild() {
         return pSelectMilestoneChild;
     }
