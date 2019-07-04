@@ -319,6 +319,7 @@ public class Node {
                     try {
                         transactionRequester.clearTransactionRequest(receivedTransactionHash);
                     } catch (Exception e1) {
+                        //fake comment
                         log.error(e1.getMessage());
                     }
                     neighbor.incStaleTransactions();
