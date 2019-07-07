@@ -114,8 +114,8 @@ public class SnapshotServiceImpl implements SnapshotService {
      * @return the initialized instance itself to allow chaining
      */
     public SnapshotServiceImpl init(Tangle tangle, SnapshotProvider snapshotProvider,
-            SpentAddressesService spentAddressesService, SpentAddressesProvider spentAddressesProvider,
-            SnapshotConfig config) {
+                                    SpentAddressesService spentAddressesService, SpentAddressesProvider spentAddressesProvider,
+                                    SnapshotConfig config) {
 
         this.tangle = tangle;
         this.snapshotProvider = snapshotProvider;
@@ -128,7 +128,7 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * <p>
      * To increase the performance of this operation, we do not apply every single milestone separately but first
      * accumulate all the necessary changes and then apply it to the snapshot in a single run. This allows us to
@@ -304,7 +304,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      */
     @Override
     public Map<Hash, Integer> generateSeenMilestones(LatestMilestoneTracker latestMilestoneTracker,
-            MilestoneViewModel targetMilestone) throws SnapshotException {
+                                                     MilestoneViewModel targetMilestone) throws SnapshotException {
 
         ProgressLogger progressLogger = new IntervalProgressLogger(
                 "Taking local snapshot [processing seen milestones]", log)
@@ -356,13 +356,13 @@ public class SnapshotServiceImpl implements SnapshotService {
             StateDiffViewModel stateDiffViewModel = StateDiffViewModel.load(tangle, snapshot.getHash());
             if (!stateDiffViewModel.isEmpty()) {
                 SnapshotStateDiffImpl snapshotStateDiff = new SnapshotStateDiffImpl(
-                    stateDiffViewModel.getDiff().entrySet().stream().map(
-                        hashLongEntry -> new HashMap.SimpleEntry<>(
-                            hashLongEntry.getKey(), -1 * hashLongEntry.getValue()
+                        stateDiffViewModel.getDiff().entrySet().stream().map(
+                                hashLongEntry -> new HashMap.SimpleEntry<>(
+                                        hashLongEntry.getKey(), -1 * hashLongEntry.getValue()
+                                )
+                        ).collect(
+                                Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)
                         )
-                    ).collect(
-                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)
-                    )
                 );
 
                 if (!snapshotStateDiff.isConsistent()) {
@@ -413,7 +413,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      * It determines the milestone by subtracting the {@link SnapshotConfig#getLocalSnapshotsDepth()} from the latest
      * solid milestone index and retrieving the next milestone before this point.
      * </p>
-     * 
+     *
      * @param tangle Tangle object which acts as a database interface
      * @param snapshotProvider data provider for the {@link Snapshot}s that are relevant for the node
      * @param config important snapshot related configuration parameters
@@ -421,7 +421,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      * @throws SnapshotException if anything goes wrong while determining the target milestone for the local snapshot
      */
     private MilestoneViewModel determineMilestoneForLocalSnapshot(Tangle tangle, SnapshotProvider snapshotProvider,
-            SnapshotConfig config) throws SnapshotException {
+                                                                  SnapshotConfig config) throws SnapshotException {
 
         int targetMilestoneIndex = snapshotProvider.getLatestSnapshot().getIndex() - config.getLocalSnapshotsDepth();
 
@@ -451,14 +451,14 @@ public class SnapshotServiceImpl implements SnapshotService {
      * is used to correctly reflect the {@link SnapshotConfig#getLocalSnapshotsPruningDelay()}, where we keep old data
      * prior to a snapshot.
      * </p>
-     * 
+     *
      * @param tangle Tangle object which acts as a database interface
      * @param oldSolidEntryPoints solid entry points of the current initial {@link Snapshot}
      * @param newSolidEntryPoints solid entry points of the new initial {@link Snapshot}
      * @param transactionPruner manager for the pruning jobs that takes care of cleaning up the old data that
      */
     private void cleanupExpiredSolidEntryPoints(Tangle tangle, Map<Hash, Integer> oldSolidEntryPoints,
-            Map<Hash, Integer> newSolidEntryPoints, TransactionPruner transactionPruner) {
+                                                Map<Hash, Integer> newSolidEntryPoints, TransactionPruner transactionPruner) {
 
         oldSolidEntryPoints.forEach((transactionHash, milestoneIndex) -> {
             if (!newSolidEntryPoints.containsKey(transactionHash)) {
@@ -486,14 +486,14 @@ public class SnapshotServiceImpl implements SnapshotService {
      * It first calculates the range of milestones that shall be deleted and then issues a {@link MilestonePrunerJob}
      * for this range (if it is not empty).
      * </p>
-     * 
+     *
      * @param config important snapshot related configuration parameters
      * @param transactionPruner  manager for the pruning jobs that takes care of cleaning up the old data that
      * @param targetMilestone milestone that was used as a reference point for the local snapshot
      * @throws SnapshotException if anything goes wrong while issuing the cleanup jobs
      */
     private void cleanupOldData(SnapshotConfig config, TransactionPruner transactionPruner,
-            MilestoneViewModel targetMilestone) throws SnapshotException {
+                                MilestoneViewModel targetMilestone) throws SnapshotException {
 
         int targetIndex = targetMilestone.index() - config.getLocalSnapshotsPruningDelay();
         int startingIndex = config.getMilestoneStartIndex() + 1;
@@ -515,7 +515,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      * <p>
      * It first writes the files to the disk and then updates the two {@link Snapshot}s accordingly.
      * </p>
-     * 
+     *
      * @param snapshotProvider data provider for the {@link Snapshot}s that are relevant for the node
      * @param newSnapshot Snapshot that shall be persisted
      * @param config important snapshot related configuration parameters
@@ -548,7 +548,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      * Since we currently use milestones as reference transactions that are sufficiently old, this definition in fact is
      * a relatively safe way to determine if a subtangle "above" a transaction got orphaned.
      * </p>
-     * 
+     *
      * @param tangle Tangle object which acts as a database interface
      * @param transaction transaction that shall be checked
      * @param referenceTransaction transaction that acts as a judge to the other transaction
@@ -557,7 +557,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      * @throws SnapshotException if anything goes wrong while determining the orphaned status
      */
     private boolean isOrphaned(Tangle tangle, TransactionViewModel transaction,
-            TransactionViewModel referenceTransaction, Set<Hash> processedTransactions) throws SnapshotException {
+                               TransactionViewModel referenceTransaction, Set<Hash> processedTransactions) throws SnapshotException {
 
         AtomicBoolean nonOrphanedTransactionFound = new AtomicBoolean(false);
         try {
@@ -596,7 +596,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      * its status. This is a storage <=> reliability trade off, since the only bad effect of having too many solid entry
      * points) is a bigger snapshot file.
      * </p>
-     * 
+     *
      * @param tangle Tangle object which acts as a database interface
      * @param transactionHash hash of the transaction that shall be checked
      * @param targetMilestone milestone that is used as an anchor for our checks
@@ -640,31 +640,14 @@ public class SnapshotServiceImpl implements SnapshotService {
      * It simply iterates through the old solid entry points and checks them one by one. If an old solid entry point
      * is found to still be relevant it is added to the passed in map.
      * </p>
-     * 
+     *
      * @param tangle Tangle object which acts as a database interface
      * @param snapshotProvider data provider for the {@link Snapshot}s that are relevant for the node
      * @param targetMilestone milestone that is used to generate the solid entry points
      * @param solidEntryPoints map that is used to collect the solid entry points
      */
     private void processOldSolidEntryPoints(Tangle tangle, SnapshotProvider snapshotProvider,
-            MilestoneViewModel targetMilestone, Map<Hash, Integer> solidEntryPoints) {
-
-        ProgressLogger progressLogger = new IntervalProgressLogger(
-                "Taking local snapshot [analyzing old solid entry points]", log)
-                .start(snapshotProvider.getInitialSnapshot().getSolidEntryPoints().size());
-
-        Snapshot initialSnapshot = snapshotProvider.getInitialSnapshot();
-        initialSnapshot.getSolidEntryPoints().forEach((hash, milestoneIndex) -> {
-            if (!Hash.NULL_HASH.equals(hash) && targetMilestone.index() - milestoneIndex <= SOLID_ENTRY_POINT_LIFETIME
-                    && isSolidEntryPoint(tangle, hash, targetMilestone)) {
-
-                solidEntryPoints.put(hash, milestoneIndex);
-            }
-
-            progressLogger.progress();
-        });
-
-        progressLogger.finish();
+                                            MilestoneViewModel targetMilestone, Map<Hash, Integer> solidEntryPoints) {
     }
 
     /**
@@ -676,7 +659,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      * Every transaction is checked for being a solid entry point and added to the passed in map (if it was found to be
      * one).
      * </p>
-     * 
+     *
      * @param tangle Tangle object which acts as a database interface
      * @param snapshotProvider data provider for the {@link Snapshot}s that are relevant for the node
      * @param targetMilestone milestone that is used to generate the solid entry points
@@ -684,43 +667,7 @@ public class SnapshotServiceImpl implements SnapshotService {
      * @throws SnapshotException if anything goes wrong while determining the solid entry points
      */
     private void processNewSolidEntryPoints(Tangle tangle, SnapshotProvider snapshotProvider,
-            MilestoneViewModel targetMilestone, Map<Hash, Integer> solidEntryPoints) throws SnapshotException {
+                                            MilestoneViewModel targetMilestone, Map<Hash, Integer> solidEntryPoints) throws SnapshotException {
 
-        ProgressLogger progressLogger = new IntervalProgressLogger(
-                "Taking local snapshot [generating solid entry points]", log);
-
-        try {
-            progressLogger.start(Math.min(targetMilestone.index() - snapshotProvider.getInitialSnapshot().getIndex(),
-                    OUTER_SHELL_SIZE));
-
-            MilestoneViewModel nextMilestone = targetMilestone;
-            while (nextMilestone != null && nextMilestone.index() > snapshotProvider.getInitialSnapshot().getIndex() &&
-                    progressLogger.getCurrentStep() < progressLogger.getStepCount()) {
-
-                MilestoneViewModel currentMilestone = nextMilestone;
-                DAGHelper.get(tangle).traverseApprovees(
-                        currentMilestone.getHash(),
-                        currentTransaction -> currentTransaction.snapshotIndex() >= currentMilestone.index(),
-                        currentTransaction -> {
-                            if (isSolidEntryPoint(tangle, currentTransaction.getHash(), targetMilestone)) {
-                                solidEntryPoints.put(currentTransaction.getHash(), targetMilestone.index());
-                            }
-                        }
-                );
-
-                solidEntryPoints.put(currentMilestone.getHash(), targetMilestone.index());
-
-                nextMilestone = MilestoneViewModel.findClosestPrevMilestone(tangle, currentMilestone.index(),
-                        snapshotProvider.getInitialSnapshot().getIndex());
-
-                progressLogger.progress();
-            }
-
-            progressLogger.finish();
-        } catch (Exception e) {
-            progressLogger.abort(e);
-
-            throw new SnapshotException("could not generate the solid entry points for " + targetMilestone, e);
-        }
     }
 }

@@ -12,6 +12,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -130,7 +131,7 @@ public class SnapshotProviderImpl implements SnapshotProvider {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * <p>
      * It first writes two temporary files, then renames the current files by appending them with a ".bkp" extension and
      * finally renames the temporary files. This mechanism reduces the chances of the files getting corrupted if IRI
@@ -214,7 +215,7 @@ public class SnapshotProviderImpl implements SnapshotProvider {
      * This method checks if local snapshot files are available on the hard disk of the node and tries to load them. If
      * no local snapshot files exist or local snapshots are not enabled we simply return null.
      * </p>
-     * 
+     *
      * @return local snapshot of the node
      * @throws SnapshotException if local snapshot files exist but are malformed
      */
@@ -337,7 +338,7 @@ public class SnapshotProviderImpl implements SnapshotProvider {
      * It creates the corresponding reader and for the file on the given location and passes it on to
      * {@link #readSnapshotState(BufferedReader)}.
      * </p>
-     * 
+     *
      * @param snapshotStateFilePath location of the snapshot state file
      * @return the unserialized version of the state file
      * @throws SnapshotException if anything goes wrong while reading the state file
@@ -379,7 +380,7 @@ public class SnapshotProviderImpl implements SnapshotProvider {
      * The format of the input is pairs of "address;balance" separated by newlines. It simply reads the input line by
      * line, adding the corresponding values to the map.
      * </p>
-     * 
+     *
      * @param reader reader allowing us to retrieve the lines of the {@link SnapshotState} file
      * @return the unserialized version of the snapshot state state file
      * @throws IOException if something went wrong while trying to access the file
@@ -408,7 +409,7 @@ public class SnapshotProviderImpl implements SnapshotProvider {
      * <p>
      * It is used by local snapshots to persist the in memory states and allow IRI to resume from the local snapshot.
      * </p>
-     * 
+     *
      * @param snapshotState state object that shall be written
      * @param snapshotPath location of the file that shall be written
      * @throws SnapshotException if anything goes wrong while writing the file
@@ -440,7 +441,7 @@ public class SnapshotProviderImpl implements SnapshotProvider {
      * <p>
      * It is used by local snapshots to determine the relevant information about the saved snapshot.
      * </p>
-     * 
+     *
      * @param snapshotMetaDataFile File object with the path to the snapshot metadata file
      * @return SnapshotMetaData instance holding all the relevant details about the snapshot
      * @throws SnapshotException if anything goes wrong while reading and parsing the file
@@ -584,27 +585,7 @@ public class SnapshotProviderImpl implements SnapshotProvider {
     private Map<Hash, Integer> readSolidEntryPointsFromMetaDataFile(BufferedReader reader, int amountOfSolidEntryPoints)
             throws SnapshotException, IOException {
 
-        Map<Hash, Integer> solidEntryPoints = new HashMap<>();
-
-        for(int i = 0; i < amountOfSolidEntryPoints; i++) {
-            String line;
-            if ((line = reader.readLine()) == null) {
-                throw new SnapshotException("could not read a solid entry point from the metadata file");
-            }
-
-            String[] parts = line.split(";", 2);
-            if(parts.length == 2) {
-                try {
-                    solidEntryPoints.put(HashFactory.TRANSACTION.create(parts[0]), Integer.parseInt(parts[1]));
-                } catch (NumberFormatException e) {
-                    throw new SnapshotException("could not parse a solid entry point from the metadata file", e);
-                }
-            } else {
-                throw new SnapshotException("could not parse a solid entry point from the metadata file");
-            }
-        }
-
-        return solidEntryPoints;
+        return Collections.emptyMap();
     }
 
     /**
@@ -672,14 +653,14 @@ public class SnapshotProviderImpl implements SnapshotProvider {
                                     String.valueOf(seenMilestones.size())
                             ),
                             Stream.concat(
-                                solidEntryPoints.entrySet()
-                                        .stream()
-                                        .sorted(Map.Entry.comparingByValue())
-                                        .<CharSequence>map(entry -> entry.getKey().toString() + ";" + entry.getValue()),
-                                seenMilestones.entrySet()
-                                        .stream()
-                                        .sorted(Map.Entry.comparingByValue())
-                                        .<CharSequence>map(entry -> entry.getKey().toString() + ";" + entry.getValue())
+                                    solidEntryPoints.entrySet()
+                                            .stream()
+                                            .sorted(Map.Entry.comparingByValue())
+                                            .<CharSequence>map(entry -> entry.getKey().toString() + ";" + entry.getValue()),
+                                    seenMilestones.entrySet()
+                                            .stream()
+                                            .sorted(Map.Entry.comparingByValue())
+                                            .<CharSequence>map(entry -> entry.getKey().toString() + ";" + entry.getValue())
                             )
                     ).iterator()
             );
