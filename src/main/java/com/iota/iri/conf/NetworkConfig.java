@@ -59,7 +59,7 @@ public interface NetworkConfig extends Config {
     double getpDropCacheEntry();
 
     /**
-     * @return Descriptions#CACHE_SIZE_BYTES
+     * @return Descriptions#CACHE_SIZE_BYTES - tes
      */
     int getCacheSizeBytes();
 
