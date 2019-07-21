@@ -30,8 +30,6 @@ public class RecursiveWeightCalculator implements RatingCalculator {
     private final Tangle tangle;
     private final SnapshotProvider snapshotProvider;
     
-    private Map<Hash, ArrayDeque<Hash>> txToDirectApprovers = new HashMap<>();
-
     /**
      * Constructor for Recursive Weight Calculator
      * @param tangle Tangle object which acts as a database interface
@@ -79,20 +77,21 @@ public class RecursiveWeightCalculator implements RatingCalculator {
             HashSet<HashId> set = new HashSet<>();
             set.add(txHash);
             
-            int rating = txHash.equals(entryPoint) ? hashWeight.size() + 1 : getRating(txHash, set);
+            int rating = txHash.equals(entryPoint) ? hashWeight.size() + 1 : getRating(txHash, set, txToDirectApprovers);
             hashWeight.put(txHash, rating);
         }
         return hashWeight;
     }
 
-    private int getRating(Hash hash, Set<HashId> seenHashes) throws Exception {
+    private int getRating(Hash hash, Set<HashId> seenHashes, Map<Hash, ArrayDeque<Hash>> txToDirectApprovers)
+            throws Exception {
         int weight = 1;
 
         ArrayDeque<Hash> approvers = getTxDirectApproversHashes(hash, txToDirectApprovers, null);
         for (Hash approver : approvers) {
             if (!seenHashes.contains(approver)) {
                 seenHashes.add(approver);
-                weight += getRating(approver, seenHashes);
+                weight += getRating(approver, seenHashes, txToDirectApprovers);
             }
         }
         
