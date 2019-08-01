@@ -1,0 +1,39 @@
+defaults: &blowball_tests_config_files
+  db: https://s3.eu-central-1.amazonaws.com/iotaledger-dbfiles/dev/Blowball_Tests_db.tar
+  db_checksum: 0e9017ee8e6bef601dd68f08200d4ff2290701d0e903da518097620fa8adb092
+  iri_args: ['--testnet-coordinator',
+  'EFPNKGPCBXXXLIBYFGIGYBYTFFPIOQVNNVVWTTIYZO9NFREQGVGDQQHUUQ9CLWAEMXVDFSSMOTGAHVIBH',
+  '--milestone-keys',
+  '18',
+  '--milestone-start',
+  '2',
+  '--testnet-no-coo-validation',
+  'true',
+  '--testnet',
+  'true'
+  ]
+  java_options: -agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n -javaagent:/opt/jacoco/lib/jacocoagent.jar=destfile=/iri/jacoco.exec,output=file,append=true,dumponexit=true
+
+seeds: # For internal use by the regression system. 
+    - SEED
+    - SIID
+
+nodes:
+  nodeA: #name
+    <<: *blowball_tests_config_files
+  
+  nodeB:
+    <<: *blowball_tests_config_files
+
+  nodeC:
+    <<: *blowball_tests_config_files
+
+  nodeD:
+    <<: *blowball_tests_config_files
+
+  nodeE:
+    <<: *blowball_tests_config_files
+
+  nodeF:
+    <<: *blowball_tests_config_files
+

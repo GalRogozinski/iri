@@ -3,7 +3,7 @@ package com.iota.iri.benchmarks.dbbenchmark;
 import com.iota.iri.benchmarks.dbbenchmark.states.EmptyState;
 import com.iota.iri.benchmarks.dbbenchmark.states.FullState;
 import com.iota.iri.controllers.TransactionViewModel;
-import com.iota.iri.model.Transaction;
+import com.iota.iri.model.persistables.Transaction;
 import com.iota.iri.storage.Indexable;
 import com.iota.iri.storage.Persistable;
 import com.iota.iri.utils.Pair;
@@ -15,7 +15,7 @@ public class RocksDbBenchmark {
     @Benchmark
     public void persistOneByOne(EmptyState state) throws Exception {
         for (TransactionViewModel tvm: state.getTransactions()) {
-            tvm.store(state.getTangle());
+            tvm.store(state.getTangle(), state.getSnapshotProvider().getInitialSnapshot());
         }
     }
 

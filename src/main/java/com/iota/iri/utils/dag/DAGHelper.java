@@ -1,5 +1,6 @@
 package com.iota.iri.utils.dag;
 
+import com.iota.iri.controllers.ApproveeViewModel;
 import com.iota.iri.controllers.TransactionViewModel;
 import com.iota.iri.model.Hash;
 import com.iota.iri.storage.Tangle;
@@ -7,6 +8,8 @@ import com.iota.iri.storage.Tangle;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import pl.touk.throwing.ThrowingConsumer;
 
 /**
  * This class offers generic functions for recurring tasks that are related to the tangle and that otherwise would have
@@ -37,7 +40,9 @@ public class DAGHelper {
         if((instance = instances.get(tangle)) == null) {
             synchronized(DAGHelper.class) {
                 if((instance = instances.get(tangle)) == null) {
-                    instance = instances.put(tangle, new DAGHelper(tangle));
+                    instance = new DAGHelper(tangle);
+
+                    instances.put(tangle, instance);
                 }
             }
         }
@@ -89,12 +94,12 @@ public class DAGHelper {
         try {
             Hash currentTransactionHash;
             while((currentTransactionHash = transactionsToExamine.poll()) != null) {
-                if(processedTransactions.add(currentTransactionHash)) {
+                if(currentTransactionHash == startingTransactionHash || processedTransactions.add(currentTransactionHash)) {
                     TransactionViewModel currentTransaction = TransactionViewModel.fromHash(tangle, currentTransactionHash);
                     if(
-                        currentTransaction.getType() != TransactionViewModel.PREFILLED_SLOT && (
-                            // do not "test" the starting transaction since it is not an "approver"
-                            currentTransactionHash == startingTransactionHash ||
+                        // do not "test" the starting transaction since it is not an "approver"
+                        currentTransactionHash == startingTransactionHash || (
+                            currentTransaction.getType() != TransactionViewModel.PREFILLED_SLOT &&
                             condition.test(currentTransaction)
                         )
                     ) {
@@ -103,7 +108,7 @@ public class DAGHelper {
                             currentTransactionConsumer.accept(currentTransaction);
                         }
 
-                        currentTransaction.getApprovers(tangle).getHashes().stream().forEach(approverHash -> transactionsToExamine.add(approverHash));
+                        transactionsToExamine.addAll(ApproveeViewModel.load(tangle, currentTransactionHash).getHashes());
                     }
                 }
             }
@@ -158,13 +163,13 @@ public class DAGHelper {
      */
     public void traverseApprovees(Hash startingTransactionHash,
                                   Predicate<TransactionViewModel> condition,
-                                  Consumer<TransactionViewModel> currentTransactionConsumer,
+                                  ThrowingConsumer<TransactionViewModel, ? extends Exception> currentTransactionConsumer,
                                   Set<Hash> processedTransactions) throws TraversalException {
         Queue<Hash> transactionsToExamine = new ArrayDeque<>(Collections.singleton(startingTransactionHash));
         try {
             Hash currentTransactionHash;
             while((currentTransactionHash = transactionsToExamine.poll()) != null) {
-                if(processedTransactions.add(currentTransactionHash)) {
+                if(currentTransactionHash == startingTransactionHash || processedTransactions.add(currentTransactionHash)) {
                     TransactionViewModel currentTransaction = TransactionViewModel.fromHash(tangle, currentTransactionHash);
                     if(
                         currentTransaction.getType() != TransactionViewModel.PREFILLED_SLOT &&(
@@ -202,7 +207,8 @@ public class DAGHelper {
      */
     public void traverseApprovees(Hash startingTransactionHash,
                                   Predicate<TransactionViewModel> condition,
-                                  Consumer<TransactionViewModel> currentTransactionConsumer) throws TraversalException {
+                                  ThrowingConsumer<TransactionViewModel, ? extends Exception> currentTransactionConsumer)
+            throws TraversalException {
         traverseApprovees(startingTransactionHash, condition, currentTransactionConsumer, new HashSet<>());
     }
 

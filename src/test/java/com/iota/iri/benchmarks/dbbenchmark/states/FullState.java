@@ -1,7 +1,7 @@
 package com.iota.iri.benchmarks.dbbenchmark.states;
 
 import com.iota.iri.controllers.TransactionViewModel;
-import com.iota.iri.model.Transaction;
+import com.iota.iri.model.persistables.Transaction;
 import com.iota.iri.storage.Indexable;
 import com.iota.iri.storage.Persistable;
 import com.iota.iri.utils.Pair;
@@ -42,7 +42,7 @@ public class FullState extends DbState {
     public void populateDb() throws Exception {
         System.out.println("-----------------------iteration setup--------------------------------");
         for (TransactionViewModel tvm : getTransactions()) {
-            tvm.store(getTangle());
+            tvm.store(getTangle(), getSnapshotProvider().getInitialSnapshot());
         }
     }
 

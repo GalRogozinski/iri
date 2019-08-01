@@ -1,17 +1,17 @@
 package com.iota.iri.controllers;
 
-import com.iota.iri.model.Hash;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.iota.iri.model.Hash;
+
 import java.util.concurrent.ExecutionException;
+
+import static com.iota.iri.TransactionTestUtils.getTransactionHash;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by paul on 5/2/17.
- */
 public class TipsViewModelTest {
     @Before
     public void setUp() throws Exception {
@@ -79,7 +79,7 @@ public class TipsViewModelTest {
         int capacity = TipsViewModel.MAX_TIPS;
         //fill tips list
         for (int i = 0; i < capacity * 2 ; i++) {
-            Hash hash = TransactionViewModelTest.getRandomTransactionHash();
+            Hash hash = getTransactionHash();
             tipsVM.addTipHash(hash);
         }
         //check that limit wasn't breached
@@ -92,7 +92,7 @@ public class TipsViewModelTest {
         int capacity = TipsViewModel.MAX_TIPS;
         //fill tips list
         for (int i = 0; i < capacity * 2 ; i++) {
-            Hash hash = TransactionViewModelTest.getRandomTransactionHash();
+            Hash hash = getTransactionHash();
             tipsVM.addTipHash(hash);
             tipsVM.setSolid(hash);
         }
@@ -106,7 +106,7 @@ public class TipsViewModelTest {
         int capacity = TipsViewModel.MAX_TIPS;
         //fill tips list
         for (int i = 0; i <= capacity * 4; i++) {
-            Hash hash = TransactionViewModelTest.getRandomTransactionHash();
+            Hash hash = getTransactionHash();
             tipsVM.addTipHash(hash);
             if (i % 2 == 1) {
                 tipsVM.setSolid(hash);

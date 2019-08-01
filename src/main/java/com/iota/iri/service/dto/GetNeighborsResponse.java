@@ -2,98 +2,35 @@ package com.iota.iri.service.dto;
 
 import java.util.List;
 
+/**
+ * 
+ * Contains information about the result of a successful {@code getNeighbors} API call.
+ * See {@link GetNeighborsResponse#create(List)} for how this response is created.
+ *
+ */
 public class GetNeighborsResponse extends AbstractResponse {
 
+    /**
+     * The neighbors you are connected with, as well as their activity counters.
+     * 
+     * @see com.iota.iri.service.dto.GetNeighborsResponse.Neighbor
+     */
     private Neighbor[] neighbors;
 
     /**
-     * The list of neighbors, including the following stats: 
-     *  address, connectionType,
-     *  numberOfAllTransactions, numberOfRandomTransactionRequests, 
-     *  numberOfNewTransactions, numberOfInvalidTransactions, numberOfSentTransactions
-     * 
-     * @see {@link com.iota.iri.service.dto.GetNeighborsResponse.Neighbor}
-     * @return the neighbors
+     * @see com.iota.iri.service.dto.GetNeighborsResponse.Neighbor
+     * @return {@link #neighbors}
      */
     public Neighbor[] getNeighbors() {
         return neighbors;
     }
     
-    static class Neighbor {
-
-        private String address;
-        public long numberOfAllTransactions, numberOfRandomTransactionRequests, numberOfNewTransactions, numberOfInvalidTransactions, numberOfSentTransactions;
-        public String connectionType;
-
-        /**
-         * The address of your peer
-         * 
-         * @return the address
-         */
-        public String getAddress() {
-            return address;
-        }
-
-        /**
-         * Number of all transactions sent (invalid, valid, already-seen)
-         * 
-         * @return the number
-         */
-        public long getNumberOfAllTransactions() {
-            return numberOfAllTransactions;
-        }
-
-        /**
-         * New transactions which were transmitted.
-         * 
-         * @return the number
-         */
-        public long getNumberOfNewTransactions() {
-            return numberOfNewTransactions;
-        }
-
-        /**
-         * Invalid transactions your peer has sent you. 
-         * These are transactions with invalid signatures or overall schema.
-         * 
-         * @return the number
-         */
-        public long getNumberOfInvalidTransactions() {
-            return numberOfInvalidTransactions;
-        }
-        
-        /**
-         * Amount of transactions send through your peer
-         * 
-         * @return the number
-         */
-        public long getNumberOfSentTransactions() {
-            return numberOfSentTransactions;
-        }
-
-        /**
-         * The method type your peer is using to connect (TCP / UDP)
-         * 
-         * @return the connection type
-         */
-        public String getConnectionType() {
-            return connectionType;
-        }
-
-        public static Neighbor createFrom(com.iota.iri.network.Neighbor n) {
-            Neighbor ne = new Neighbor();
-            int port = n.getPort();
-            ne.address = n.getAddress().getHostString() + ":" + port;
-            ne.numberOfAllTransactions = n.getNumberOfAllTransactions();
-            ne.numberOfInvalidTransactions = n.getNumberOfInvalidTransactions();
-            ne.numberOfNewTransactions = n.getNumberOfNewTransactions();
-            ne.numberOfRandomTransactionRequests = n.getNumberOfRandomTransactionRequests();
-            ne.numberOfSentTransactions = n.getNumberOfSentTransactions();
-            ne.connectionType = n.connectionType();
-            return ne;
-        }
-    }
-
+    /**
+     * Creates a new {@link GetNeighborsResponse}
+     * 
+     * @param elements {@link com.iota.iri.network.Neighbor}
+     * @return an {@link GetNeighborsResponse} filled all neighbors and their activity.
+     */
     public static AbstractResponse create(final List<com.iota.iri.network.Neighbor> elements) {
         GetNeighborsResponse res = new GetNeighborsResponse();
         res.neighbors = new Neighbor[elements.size()];
@@ -103,5 +40,138 @@ public class GetNeighborsResponse extends AbstractResponse {
         }
         return res;
     }
+    
+    /**
+     * 
+     * A plain DTO of an iota neighbor.
+     * 
+     */
+    @SuppressWarnings("unused")
+    public static class Neighbor {
 
+        /**
+         * The address of your neighbor
+         */
+        private String address;
+        
+        /**
+         * Number of all transactions sent (invalid, valid, already-seen)
+         */
+        private long numberOfAllTransactions;
+        
+        /**
+         * Random tip requests which were sent
+         */
+        private long numberOfRandomTransactionRequests;
+        
+        /**
+         * New transactions which were transmitted.
+         */
+        private long numberOfNewTransactions;
+        
+        /**
+         * Invalid transactions your neighbor has sent you. 
+         * These are transactions with invalid signatures or overall schema.
+         */
+        private long numberOfInvalidTransactions;
+        
+        /**
+         * Stale transactions your neighbor has sent you.
+         * These are transactions with a timestamp older than your latest snapshot.
+         */
+        private long numberOfStaleTransactions;
+        
+        /**
+         * Amount of transactions send through your neighbor
+         */
+        private long numberOfSentTransactions;
+        
+        /**
+         * The method type your neighbor is using to connect (TCP / UDP)
+         */
+        private String connectionType;
+        
+        /**
+         * Creates a new Neighbor DTO from a Neighbor network instance
+         * @param n the neighbor currently connected to this node
+         * @return a new instance of {@link GetNeighborsResponse.Neighbor}
+         */
+        public static Neighbor createFrom(com.iota.iri.network.Neighbor n) {
+            Neighbor ne = new Neighbor();
+            int port = n.getPort();
+            ne.address = n.getAddress().getAddress().getHostAddress() + ":" + port;
+            ne.numberOfAllTransactions = n.getNumberOfAllTransactions();
+            ne.numberOfInvalidTransactions = n.getNumberOfInvalidTransactions();
+            ne.numberOfStaleTransactions = n.getNumberOfStaleTransactions();
+            ne.numberOfNewTransactions = n.getNumberOfNewTransactions();
+            ne.numberOfRandomTransactionRequests = n.getNumberOfRandomTransactionRequests();
+            ne.numberOfSentTransactions = n.getNumberOfSentTransactions();
+            ne.connectionType = n.connectionType();
+            return ne;
+        }
+
+        /**
+         * 
+         * {@link #address}
+         */
+        public String getAddress() {
+            return address;
+        }
+
+        /**
+         * 
+         * {@link #numberOfAllTransactions}
+         */
+        public long getNumberOfAllTransactions() {
+            return numberOfAllTransactions;
+        }
+
+        /**
+         * 
+         * {@link #numberOfNewTransactions}
+         */
+        public long getNumberOfNewTransactions() {
+            return numberOfNewTransactions;
+        }
+
+        /**
+         * 
+         * {@link #numberOfInvalidTransactions}
+         */
+        public long getNumberOfInvalidTransactions() {
+            return numberOfInvalidTransactions;
+        }
+
+        /**
+         * 
+         * {@link #numberOfStaleTransactions}
+         */
+        public long getNumberOfStaleTransactions() {
+            return numberOfStaleTransactions;
+        }
+
+        /**
+         * 
+         * {@link #numberOfSentTransactions}
+         */
+        public long getNumberOfSentTransactions() {
+            return numberOfSentTransactions;
+        }
+        
+        /**
+         * 
+         * {@link #numberOfRandomTransactionRequests}
+         */
+        public long getNumberOfRandomTransactionRequests() {
+            return numberOfRandomTransactionRequests;
+        }
+
+        /**
+         * 
+         * {@link #connectionType}
+         */
+        public String getConnectionType() {
+            return connectionType;
+        }
+    }
 }
