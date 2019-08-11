@@ -7,6 +7,7 @@ import com.iota.iri.controllers.TransactionViewModel;
 import com.iota.iri.model.persistables.Transaction;
 import com.iota.iri.service.snapshot.SnapshotProvider;
 import com.iota.iri.service.snapshot.impl.SnapshotProviderImpl;
+import com.iota.iri.storage.PersistenceCache;
 import com.iota.iri.storage.PersistenceProvider;
 import com.iota.iri.storage.Tangle;
 import com.iota.iri.storage.rocksDB.RocksDBPersistenceProvider;
@@ -44,9 +45,10 @@ public abstract class DbState {
         PersistenceProvider dbProvider = new RocksDBPersistenceProvider(
                 dbFolder.getAbsolutePath(), logFolder.getAbsolutePath(),  BaseIotaConfig.Defaults.DB_CACHE_SIZE, Tangle.COLUMN_FAMILIES, Tangle.METADATA_COLUMN_FAMILY);
         dbProvider.init();
+        PersistenceProvider  cachePersistance = new PersistenceCache(dbProvider, 5000);
         tangle = new Tangle();
         snapshotProvider = new SnapshotProviderImpl().init(new MainnetConfig());
-        tangle.addPersistenceProvider(dbProvider);
+        tangle.addPersistenceProvider(cachePersistance);
         String trytes = "";
         System.out.println("numTxsToTest = [" + numTxsToTest + "]");
         transactions = new ArrayList<>(numTxsToTest);

@@ -471,7 +471,8 @@ public class RocksDBPersistenceProvider implements PersistenceProvider {
                 .setFilter(bloomFilter)
                 .setCacheNumShardBits(2)
                 .setBlockSizeDeviation(10)
-                .setBlockRestartInterval(16);
+                .setBlockRestartInterval(16)
+                .setNoBlockCache(true);
                 /*.setBlockCacheSize(cacheSize * SizeUnit.KB)
                 .setBlockCacheCompressedNumShardBits(10)
                 .setBlockCacheCompressedSize(32 * SizeUnit.KB);*/
