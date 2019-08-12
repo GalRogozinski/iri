@@ -19,23 +19,23 @@ public class RocksDbBenchmark {
         }
     }
 
-    @Benchmark
-    public void deleteOneByOne(FullState state) throws Exception {
-        for (TransactionViewModel tvm : state.getTransactions()) {
-            tvm.delete(state.getTangle());
-        }
-    }
-
-    @Benchmark
-    public void dropAll(FullState state) throws Exception {
-        state.getTangle().clearColumn(Transaction.class);
-        state.getTangle().clearMetadata(Transaction.class);
-    }
-
-    @Benchmark
-    public void deleteBatch(FullState state) throws Exception {
-        state.getTangle().deleteBatch(state.getPairs());
-    }
+//    @Benchmark
+//    public void deleteOneByOne(FullState state) throws Exception {
+//        for (TransactionViewModel tvm : state.getTransactions()) {
+//            tvm.delete(state.getTangle());
+//        }
+//    }
+//
+//    @Benchmark
+//    public void dropAll(FullState state) throws Exception {
+//        state.getTangle().clearColumn(Transaction.class);
+//        state.getTangle().clearMetadata(Transaction.class);
+//    }
+//
+//    @Benchmark
+//    public void deleteBatch(FullState state) throws Exception {
+//        state.getTangle().deleteBatch(state.getPairs());
+//    }
 
     @Benchmark
     public void fetchOneByOne(FullState state) throws Exception {

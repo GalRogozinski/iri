@@ -18,9 +18,9 @@ public class BenchmarkRunner {
                 .include(RocksDbBenchmark.class.getName() + ".*")
                 .mode(Mode.AverageTime)
                 .timeUnit(TimeUnit.MILLISECONDS)
-                .warmupIterations(5)
+                .warmupIterations(2)
                 .forks(1)
-                .measurementIterations(10)
+                .measurementIterations(3)
                 .shouldFailOnError(true)
                 .shouldDoGC(false)
                 .build();
