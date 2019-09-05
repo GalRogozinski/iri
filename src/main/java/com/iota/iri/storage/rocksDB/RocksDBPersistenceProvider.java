@@ -495,7 +495,7 @@ public class RocksDBPersistenceProvider implements PersistenceProvider {
             }
 
 
-            db = RocksDB.open(path);
+            db = RocksDB.open(path, columnFamilyDescriptors, columnFamilyHandles);
             db.enableFileDeletions(true);
 
             initClassTreeMap(columnFamilyDescriptors);

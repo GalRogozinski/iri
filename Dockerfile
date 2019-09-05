@@ -4,7 +4,8 @@ MAINTAINER giorgio@iota.org
 WORKDIR /iri
 
 COPY . /iri
-RUN mvn clean package
+RUN mvn dependency:go-offline
+RUN mvn clean package -DskipTests
 
 # execution image
 FROM iotacafe/java:oracle8u181.1.webupd8.1-1@sha256:21b0fb1e5b5be7cd239a742238f346e076a46dc0003670cd50f079780288773f
@@ -52,3 +53,4 @@ ENV JAVA_OPTIONS="-XX:+UnlockExperimentalVMOptions -XX:+DisableAttachMechanism -
 
 WORKDIR /iri/data
 ENTRYPOINT [ "/entrypoint.sh" ]
+
