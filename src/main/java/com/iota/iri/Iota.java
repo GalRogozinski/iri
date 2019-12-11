@@ -170,6 +170,7 @@ public class Iota {
      *                   error.
      */
     public void init() throws Exception {
+        log.error("Evil fail :-|");
         initDependencies(); // remainder of injectDependencies method (contained init code)
 
         initializeTangle();
