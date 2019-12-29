@@ -89,6 +89,7 @@ public class LedgerServiceImpl implements LedgerService {
 
     @Override
     public boolean applyMilestoneToLedger(MilestoneViewModel milestone) throws LedgerException {
+        logger.debug("applying milestone {}", milestone.index());
         if(generateStateDiff(milestone)) {
             try {
                 snapshotService.replayMilestones(snapshotProvider.getLatestSnapshot(), milestone.index());
