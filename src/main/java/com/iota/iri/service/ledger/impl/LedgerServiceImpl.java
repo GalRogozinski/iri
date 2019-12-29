@@ -211,8 +211,8 @@ public class LedgerServiceImpl implements LedgerService {
                                             logger.debug("Transaction {} mutated the address by {}. " +
                                                     "Now the state diff is {}", bundleTransactionViewModel.getHash(),
                                                     bundleTransactionViewModel.value(), state.get(badAddr));
-                                            logger.info("Tail hash {} mutated by {}", bundleTransactions.get(0),
-                                                    value);
+                                            logger.info("Tail hash {} changed balance to {}", bundleTransactions.get(0),
+                                                    state.get(badAddr));
                                         }
                                     }
                                 }
