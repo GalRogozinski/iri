@@ -26,7 +26,7 @@ public class ASCIIProgressBar {
         int range = end - start;
 
         // compute actual percentage of current value
-        double percentage = Math.floor(((double) (current - start) / (double) range) * 1000) / 1000;
+        double percentage = Math.abs(Math.floor(((double) (current - start) / (double) range) * 1000) / 1000);
 
         // how many progress blocks to print in the progress bar
         int progressBlocks = (int) (10 * percentage);
