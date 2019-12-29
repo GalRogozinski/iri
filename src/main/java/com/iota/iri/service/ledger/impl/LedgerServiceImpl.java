@@ -192,7 +192,10 @@ public class LedgerServiceImpl implements LedgerService {
                                         .persistValidatedSpentAddressesAsync(bundleTransactions);
 
                                 if (BundleValidator.isInconsistent(bundleTransactions)) {
-                                    break;
+                                    logger.error("Encountered an inconsistent bundle with tail {} and bundle hash {}",
+                                            bundleTransactions.get(0).getHash(),
+                                            bundleTransactions.get(0).getBundleHash());
+                                    return null;
                                 }
 
 
