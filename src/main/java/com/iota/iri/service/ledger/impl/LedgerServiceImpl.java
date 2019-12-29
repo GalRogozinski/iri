@@ -5,6 +5,7 @@ import com.iota.iri.controllers.MilestoneViewModel;
 import com.iota.iri.controllers.StateDiffViewModel;
 import com.iota.iri.controllers.TransactionViewModel;
 import com.iota.iri.model.Hash;
+import com.iota.iri.model.HashFactory;
 import com.iota.iri.service.ledger.LedgerException;
 import com.iota.iri.service.ledger.LedgerService;
 import com.iota.iri.service.milestone.MilestoneService;
@@ -15,8 +16,12 @@ import com.iota.iri.service.snapshot.SnapshotService;
 import com.iota.iri.service.snapshot.impl.SnapshotStateDiffImpl;
 import com.iota.iri.service.spentaddresses.SpentAddressesService;
 import com.iota.iri.storage.Tangle;
+import com.iota.iri.utils.thread.ThreadUtils;
 
 import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>
@@ -27,6 +32,8 @@ import java.util.*;
  * </p>
  */
 public class LedgerServiceImpl implements LedgerService {
+    private static final Logger logger = LoggerFactory.getLogger(LedgerService.class);
+
     /**
      * Holds the tangle object which acts as a database interface.
      */
@@ -192,10 +199,18 @@ public class LedgerServiceImpl implements LedgerService {
 
                                     if (bundleTransactionViewModel.value() != 0 && countedTx.add(bundleTransactionViewModel.getHash())) {
 
+                                        Hash badAddr = HashFactory.ADDRESS.create(
+                                        "LEYNSIMADMXAUYRGXKKEXPHDMZLRISZBSRZXUMCIKP9JQDOXSCIUGKYFFNPPVPGCHEJA" +
+                                                "WWSDHCKGOORPC");
                                         final Hash address = bundleTransactionViewModel.getAddressHash();
                                         final Long value = state.get(address);
                                         state.put(address, value == null ? bundleTransactionViewModel.value()
                                                 : Math.addExact(value, bundleTransactionViewModel.value()));
+                                        if (badAddr.equals(address)) {
+                                            logger.info("Transaction {} mutated the address by {}. " +
+                                                    "Now the state diff is {}", bundleTransactionViewModel.getHash(),
+                                                    bundleTransactionViewModel.value(), state.get(badAddr));
+                                        }
                                     }
                                 }
                             }
