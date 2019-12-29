@@ -2,6 +2,7 @@ package com.iota.iri.service.snapshot.impl;
 
 import com.iota.iri.controllers.TransactionViewModel;
 import com.iota.iri.model.Hash;
+import com.iota.iri.model.HashFactory;
 import com.iota.iri.service.snapshot.SnapshotException;
 import com.iota.iri.service.snapshot.SnapshotState;
 import com.iota.iri.service.snapshot.SnapshotStateDiff;
@@ -157,8 +158,12 @@ public class SnapshotStateImpl implements SnapshotState {
      * @return a map of the inconsistent addresses (negative balance) and their actual balance
      */
     private Map<Hash, Long> getInconsistentAddresses() {
+        Hash bad = HashFactory.ADDRESS.create("LEYNSIMADMXAUYRGXKKEXPHDMZLRISZBSRZXUMCIKP9JQDOXSCIUGKYFFNPPVPGCHEJAWWSDHCKGOORPC");
         HashMap<Hash, Long> result = new HashMap<>();
         balances.forEach((key, value) -> {
+            if (bad.equals(key)) {
+                log.debug("Current value for bad address is {}", value);
+            }
             if (value < 0) {
                 log.debug("negative value for address {}: {}", key, value);
                 result.put(key, value);
