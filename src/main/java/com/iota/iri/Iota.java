@@ -170,6 +170,7 @@ public class Iota {
      *                   error.
      */
     public void init() throws Exception {
+        log.info("Running milestone investigation");
         initDependencies(); // remainder of injectDependencies method (contained init code)
 
         initializeTangle();
