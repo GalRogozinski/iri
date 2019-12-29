@@ -207,9 +207,11 @@ public class LedgerServiceImpl implements LedgerService {
                                         state.put(address, value == null ? bundleTransactionViewModel.value()
                                                 : Math.addExact(value, bundleTransactionViewModel.value()));
                                         if (badAddr.equals(address)) {
-                                            logger.info("Transaction {} mutated the address by {}. " +
+                                            logger.debug("Transaction {} mutated the address by {}. " +
                                                     "Now the state diff is {}", bundleTransactionViewModel.getHash(),
                                                     bundleTransactionViewModel.value(), state.get(badAddr));
+                                            logger.info("Tail hash {} mutated by {}", bundleTransactions.get(0),
+                                                    value);
                                         }
                                     }
                                 }
