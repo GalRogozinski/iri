@@ -36,9 +36,11 @@ public class RocksDbSizeProfiling {
 
         // scan the whole DB to get the size of all the components:
         TransactionViewModel tx = TransactionViewModel.first(localTangle);
+        log.info("{} is the {} tx hash", tx.getHash(), 1);
         counter = 0;
         while (tx != null) {
             if (++counter % 10000 == 0) {
+                log.info("{} is the {} tx hash", tx.getHash(), counter);
                 log.info("Scanned {} Transactions", counter);
             }
             tx = tx.next(localTangle);
