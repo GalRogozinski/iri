@@ -257,8 +257,9 @@ public class SnapshotServiceImpl implements SnapshotService {
                 replayMilestones(snapshot, targetMilestone.index());
             } else {
                 snapshot = snapshotProvider.getLatestSnapshot().clone();
-
-                rollBackMilestones(snapshot, targetMilestone.index() + 1);
+		if (distanceFromLatestSnapshot != 0) {
+                    rollBackMilestones(snapshot, targetMilestone.index() + 1);
+                }
             }
         } finally {
             snapshotProvider.getInitialSnapshot().unlockRead();
@@ -409,8 +410,7 @@ public class SnapshotServiceImpl implements SnapshotService {
             int lowestIndex) throws SnapshotException {
         MilestoneViewModel targetMilestone;
         try {
-            targetMilestone = MilestoneViewModel.findClosestPrevMilestone(tangle, lowestIndex,
-                    snapshotProvider.getInitialSnapshot().getIndex());
+            targetMilestone = MilestoneViewModel.get(tangle, lowestIndex);
         } catch (Exception e) {
             throw new SnapshotException("could not load the target milestone", e);
         }
