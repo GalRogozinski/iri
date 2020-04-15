@@ -70,10 +70,10 @@ public class TransactionViewModel {
                     + TIMESTAMP_TRINARY_SIZE + CURRENT_INDEX_TRINARY_SIZE + LAST_INDEX_TRINARY_SIZE;
 
     /** Stores the {@link HashesViewModel} for the {@link Transaction} components here */
-    private AddressViewModel address;
-    private ApproveeViewModel approovers;
-    private TransactionViewModel trunk;
-    private TransactionViewModel branch;
+    private volatile AddressViewModel address;
+    private volatile ApproveeViewModel approovers;
+    private volatile TransactionViewModel trunk;
+    private volatile TransactionViewModel branch;
     private final Hash hash;
 
     /** Transaction Types */
@@ -83,8 +83,8 @@ public class TransactionViewModel {
     // another tx references that hash
     public final static int FILLED_SLOT = -1; // knows the hash only coz another tx references that hash
 
-    private byte[] trits;
-    public int weightMagnitude;
+    private volatile byte[] trits;
+    public final int weightMagnitude;
 
     // True if should the tvm should be persisted to DB upon cache persistAndReleaseNext. False otherwise.
     private AtomicBoolean shouldPersist = new AtomicBoolean(false);

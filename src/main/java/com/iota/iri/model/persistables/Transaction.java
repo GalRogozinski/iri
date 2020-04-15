@@ -41,30 +41,30 @@ public class Transaction implements Persistable {
      */
     public static final int IS_MILESTONE_BITMASK = 0b10;
 
-    public byte[] bytes;
+    public volatile byte[] bytes;
 
-    public Hash address;
-    public Hash bundle;
-    public Hash trunk;
-    public Hash branch;
-    public Hash obsoleteTag;
-    public long value;
-    public long currentIndex;
-    public long lastIndex;
-    public long timestamp;
+    public volatile Hash address;
+    public volatile Hash bundle;
+    public volatile Hash trunk;
+    public volatile Hash branch;
+    public volatile Hash obsoleteTag;
+    public volatile long value;
+    public volatile long currentIndex;
+    public volatile long lastIndex;
+    public volatile long timestamp;
 
-    public Hash tag;
-    public long attachmentTimestamp;
-    public long attachmentTimestampLowerBound;
-    public long attachmentTimestampUpperBound;
+    public volatile Hash tag;
+    public volatile long attachmentTimestamp;
+    public volatile long attachmentTimestampLowerBound;
+    public volatile long attachmentTimestampUpperBound;
 
-    public int validity = 0;
+    public volatile int validity = 0;
     public AtomicInteger type = new AtomicInteger(TransactionViewModel.PREFILLED_SLOT);
 
     /**
      * The time when the transaction arrived. In milliseconds.
      */
-    public long arrivalTime = 0;
+    public volatile long arrivalTime = 0;
 
 
     //public boolean confirmed = false;
