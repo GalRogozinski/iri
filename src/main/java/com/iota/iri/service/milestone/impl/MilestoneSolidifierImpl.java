@@ -275,8 +275,7 @@ public class MilestoneSolidifierImpl implements MilestoneSolidifier {
                         tvm.isMilestone(tangle, snapshotProvider.getInitialSnapshot(), true);
                         registerNewMilestone(getLatestMilestoneIndex(), index, tvm.getHash());
                     }
-
-                    if (validity != MilestoneValidity.INVALID) {
+		    else if (validity != MilestoneValidity.INVALID) {
                         addMilestoneCandidate(hash, index);
                     }
                 }
@@ -315,6 +314,7 @@ public class MilestoneSolidifierImpl implements MilestoneSolidifier {
         if (!unsolidMilestones.containsKey(milestoneHash) && !seenMilestones.containsKey(milestoneIndex) &&
                 milestoneIndex > getLatestSolidMilestoneIndex()) {
             unsolidMilestones.put(milestoneHash, milestoneIndex);
+	    scanMilestonesInQueue();
         }
     }
 
